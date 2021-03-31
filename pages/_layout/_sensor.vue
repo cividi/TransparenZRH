@@ -2,9 +2,19 @@
   <div class="container">
     <Header />
     <div>
-      <h1 class="title">
-        {{ currentLayout.title }}
-      </h1>
+      <h1 class="title">{{ currentLayout.title }} {{ currentSensor.title }}</h1>
+      <div class="gaugegrid">
+        <Gauge
+          v-for="gauge in gauges_sample"
+          :key="gauge.label"
+          :label="gauge.label"
+          :value="gauge.value"
+          :unit="gauge.unit"
+        />
+      </div>
+      <div>
+        <p>{{ currentLayout.description }}</p>
+      </div>
     </div>
     <Footer />
   </div>
@@ -17,6 +27,42 @@ export default {
   data() {
     return {
       ckanURL: 'https://data.stadt-zuerich.ch/api/3/action/datastore_search',
+      gauges_sample: [
+        {
+          label: 'CO2',
+          value: 23.2,
+          unit: 'm/s',
+        },
+        {
+          label: 'NOx',
+          value: 12.1,
+          unit: 'm/s',
+        },
+        {
+          label: 'NO',
+          value: 23.2,
+          unit: 'm/s',
+        },
+        {
+          label: 'T',
+          value: 23.2,
+          unit: '°',
+        },
+      ],
+      sensors: [
+        {
+          id: '2997',
+          title: 'Lux-Guyer-Weg',
+        },
+        {
+          id: '3013',
+          title: 'Lettenviadukt',
+        },
+        {
+          id: 'Zch_Stampfenbachstrasse',
+          title: 'Stampfenbachstrasse',
+        },
+      ],
       layouts: [
         {
           name: 'air',
@@ -77,6 +123,15 @@ export default {
         ]
       }
       return this.layouts[0]
+    },
+    currentSensor() {
+      const requestedSensor = this.$route.params.sensor
+      if (this.sensors.map((i) => i.id).includes(requestedSensor)) {
+        return this.sensors[
+          this.sensors.map((i) => i.id).indexOf(requestedSensor)
+        ]
+      }
+      return this.sensors[0]
     },
   },
   async mounted() {
@@ -143,5 +198,9 @@ export default {
 
 .title {
   @apply block font-normal tracking-normal text-xl;
+}
+
+.gaugegrid {
+  @apply grid grid-cols-2;
 }
 </style>
