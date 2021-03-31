@@ -1,8 +1,9 @@
 <template>
-  <div class="container">
+  <div class="content">
     <div>
       <h1 class="title">TransparenZRH</h1>
     </div>
+    <Footer />
   </div>
 </template>
 
@@ -11,11 +12,7 @@ export default {}
 </script>
 
 <style>
-.container {
-  @apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-
 .title {
-  @apply block font-normal tracking-normal text-5xl text-zueriblue;
+  @apply block font-normal tracking-normal text-3xl text-zueriblue;
 }
 </style>
