@@ -10,7 +10,7 @@ cors = CORS(app)
 
 
 def air_layout_pipeline(sensor, url_Open_Data_Katalog):
-    sensor = 'Zch_Stampfenbachstrasse'
+    # sensor = 'Zch_Stampfenbachstrasse'
     filters = {"Standort": sensor}
     load_params = {'resource_id': '4466ec4a-b215-4134-8973-2f360e53c33d',
                    "sort": 'Datum desc',
@@ -48,9 +48,9 @@ def air_layout_pipeline(sensor, url_Open_Data_Katalog):
         json.dumps({
             "layout": 'air',
             "sensor": sensor,
-            "title": "Sensor Titel.",
-            "description": "Sensor Beschreibungstext.",
-            "updated": datetime.datetime.now().isoformat(),
+            "title": f"Luftqualität {sensor}",
+            "description": "Die ersten systematischen Messungen der Luftqualität begannen in Zürich bereits Anfang der 1980er Jahre, weshalb wir auf eine der längsten Datenreihen der Schweiz zurückblicken können. Die Daten der Messtationen werden via OpenData-Portal im Internet zugänglich gemacht.",
+            "updated": datetime.datetime.strptime(json_records[0]['Datum'], "%Y-%m-%dT%H:%M%z").isoformat(),
             "gauges": [
                 {
                     "label": NO2_label,
