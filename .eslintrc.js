@@ -6,6 +6,9 @@ module.exports = {
   },
   parserOptions: {
     parser: 'babel-eslint',
+    rules: {
+      "object-shorthand": 1,
+    }
   },
   extends: [
     '@nuxtjs',
