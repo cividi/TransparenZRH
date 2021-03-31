@@ -12,7 +12,7 @@
           :unit="gauge.unit"
         />
       </div>
-      <div>
+      <div class="description">
         <p>{{ currentLayout.description }}</p>
       </div>
     </div>
@@ -29,9 +29,9 @@ export default {
       ckanURL: 'https://data.stadt-zuerich.ch/api/3/action/datastore_search',
       gauges_sample: [
         {
-          label: 'CO2',
-          value: 23.2,
-          unit: 'm/s',
+          label: 'Seit Mitternacht',
+          value: "20'342",
+          unit: 'Personen',
         },
         {
           label: 'NOx',
@@ -44,9 +44,9 @@ export default {
           unit: 'm/s',
         },
         {
-          label: 'T',
-          value: 23.2,
-          unit: '°',
+          label: 'Heute',
+          value: 'n.v.',
+          unit: '',
         },
       ],
       sensors: [
@@ -197,10 +197,17 @@ export default {
 }
 
 .title {
-  @apply block font-normal tracking-normal text-xl;
+  @apply block font-normal tracking-normal text-xl font-bold p-5;
 }
 
 .gaugegrid {
   @apply grid grid-cols-2;
+  align-items: center;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' preserveAspectRatio='none'%3E%3Crect width='2' height='2' fill='%23090036' /%3E%3Crect width='1' height='1' fill='%230F05A0'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%230F05A0'/%3E%3C/svg%3E")
+    0 0/100% 100vw;
+}
+
+.description {
+  @apply p-5 text-sm text-coolgray;
 }
 </style>
