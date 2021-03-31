@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div class="content">
     <Header />
     <div>
-      <h1 class="title">{{ data.titel }}</h1>
+      <h1 class="title">{{ data.title }}</h1>
       <div class="gaugegrid">
         <Gauge
           v-for="gauge in data.gauges"
@@ -21,15 +21,12 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '~/plugins/axios'
 
 export default {
   async asyncData({ route }) {
-    const url = [
-      'https://transparenzrh.vercel.app/api/v1',
-      route.params.layout,
-      route.params.sensor,
-    ].join('/')
+    const url = [route.params.layout, route.params.sensor].join('/')
+    console.log(axios.defaults.baseURL)
     console.log(url)
     try {
       const { data } = await axios.get(url)
@@ -37,7 +34,7 @@ export default {
       return { data }
     } catch (err) {
       console.error(err)
-      return { data: { titel: '', gauges: [], description: '' } }
+      return { data: { title: '', gauges: [], description: '' } }
     }
   },
   methods: {},
@@ -57,7 +54,7 @@ export default {
 .gaugegrid {
   @apply grid grid-cols-2;
   align-items: center;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' preserveAspectRatio='none'%3E%3Crect width='2' height='2' fill='%23090036' /%3E%3Crect width='1' height='1' fill='%230F05A0'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%230F05A0'/%3E%3C/svg%3E")
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' preserveAspectRatio='none'%3E%3Crect width='2' height='2' fill='%230F05A0' /%3E%3Crect width='1' height='1' fill='%23537BFE'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23537BFE'/%3E%3C/svg%3E")
     0 0/100% 100vw;
 }
 

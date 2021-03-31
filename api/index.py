@@ -48,7 +48,7 @@ def air_layout_pipeline(sensor, url_Open_Data_Katalog):
         json.dumps({
             "layout": 'air',
             "sensor": sensor,
-            "titel": "Sensor Titel.",
+            "title": "Sensor Titel.",
             "description": "Sensor Beschreibungstext.",
             "updated": datetime.datetime.now().isoformat(),
             "gauges": [

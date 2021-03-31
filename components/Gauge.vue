@@ -1,11 +1,9 @@
 <template>
   <div class="gauge">
     <div class="gaugecontent">
-      <div>
-        <div class="gauge__readout gauge__value">{{ value }}</div>
-        <div class="gauge__readout gauge__unit">{{ unit }}</div>
-      </div>
       <div class="gauge__readout gauge__label">{{ label }}</div>
+      <div class="gauge__readout gauge__value">{{ value }}</div>
+      <div class="gauge__readout gauge__unit">{{ unit }}</div>
     </div>
   </div>
 </template>
@@ -22,9 +20,9 @@ export default {
   min-height: 50vw;
   display: grid;
   align-items: center;
+  text-align: center;
 }
 .gauge__readout {
-  display: inline-block;
 }
 .gauge__value {
   @apply text-4xl font-bold;
@@ -33,6 +31,6 @@ export default {
   @apply font-light text-xs;
 }
 .gauge__label {
-  @apply pt-2;
+  @apply pb-2;
 }
 </style>
