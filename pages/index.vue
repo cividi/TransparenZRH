@@ -7,10 +7,8 @@
         Daten spielen eine wichtige Rolle in der «Smart City Zürich». Dank ihnen
         kann beispielsweise die städtische Infrastruktur gezielt und effizient
         geplant und unterhalten werden. Mittels Sensoren, welche
-        <NuxtLink to="/view/air/Zch_Stampfenbachstrasse"
-          >Fahrradfrequenzen</NuxtLink
-        >,
-        <NuxtLink to="/view/velo/2997">Luftqualität</NuxtLink>
+        Fahrradfrequenzen
+        <NuxtLink to="/view/air/Zch_Schimmelstrasse">Luftqualität</NuxtLink>
         und anderes messen, werden Daten im öffentlichen Raum erhoben.
       </p>
       <p>
@@ -56,11 +54,11 @@ export default {}
   flex-direction: column;
 }
 
-.title {
-  @apply font-bold tracking-normal text-xl text-zueriblue p-4;
+h1.title {
+  @apply font-bold tracking-normal text-xl text-zueriblue px-4;
 }
 
 p {
-  @apply p-4;
+  @apply px-4 py-2;
 }
 </style>
