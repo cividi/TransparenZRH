@@ -2,10 +2,10 @@
   <div class="content">
     <Header />
     <div>
-      <h1 class="title">{{ data.title }}</h1>
+      <h1 class="title">{{ sensorData.title }}</h1>
       <div class="gaugegrid">
         <Gauge
-          v-for="gauge in data.gauges"
+          v-for="gauge in sensorData.gauges"
           :key="gauge.label"
           :label="gauge.label"
           :value="gauge.value"
@@ -13,7 +13,7 @@
         />
       </div>
       <div class="description">
-        <p>{{ data.description }}</p>
+        <p>{{ sensorData.description }}</p>
       </div>
     </div>
     <Footer />
@@ -21,23 +21,22 @@
 </template>
 
 <script>
-import axios from '~/plugins/axios'
-
 export default {
-  async asyncData({ route }) {
-    const url = [route.params.layout, route.params.sensor].join('/')
-    console.log(axios.defaults.baseURL)
-    console.log(url)
-    try {
-      const { data } = await axios.get(url)
-      console.log(data)
-      return { data }
-    } catch (err) {
-      console.error(err)
-      return { data: { title: '', gauges: [], description: '' } }
+  data() {
+    return {
+      sensorData: { title: 'Lädt...', gauges: [], description: '' },
+      fetchUrl: [this.$route.params.layout, this.$route.params.sensor].join(
+        '/'
+      ),
     }
   },
-  methods: {},
+  async mounted() {
+    console.log(this.fetchUrl)
+    const fetchedData = await this.$axios
+      .$get(this.fetchUrl)
+      .then((response) => (this.info = response))
+    this.sensorData = fetchedData
+  },
 }
 </script>
 
