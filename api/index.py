@@ -14,8 +14,8 @@ def api(layout, sensor):
     return Response(
         json.dumps({
             "layout": layout,
-            "time": sensor,
-            "titel": "Sensor Titel.",
+            "sensor": sensor,
+            "title": "Velozähler Guyer-Weg",
             "description": "Sensor Beschreibungstext.",
             "updated": "2021-03-31T12:00",
             "gauges": [

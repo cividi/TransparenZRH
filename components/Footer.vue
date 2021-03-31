@@ -1,11 +1,14 @@
 <template>
   <footer>
-    <NuxtLink to="/impressum">Über das Projekt / Impressum</NuxtLink>
+    <NuxtLink to="/"
+      >Mehr erfahren zum Projekt «Digitale Transparenz im öffentlichen
+      Raum</NuxtLink
+    >
   </footer>
 </template>
 
 <style scoped>
 footer {
-  @apply relative bottom-0 text-sm text-coolgray block text-center;
+  @apply relative bottom-0 text-sm text-coolgray block p-5;
 }
 </style>
