@@ -26,7 +26,7 @@ import axios from 'axios'
 export default {
   async asyncData({ route }) {
     const url = [
-      'http://transparenzrh.vercel.app/api/v1',
+      'https://transparenzrh.vercel.app/api/v1',
       route.params.layout,
       route.params.sensor,
     ].join('/')
