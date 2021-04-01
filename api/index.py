@@ -10,6 +10,17 @@ app.url_map.strict_slashes = False
 cors = CORS(app)
 
 
+def get_name_for_verkehrszaehlungs_sensor_id(FK_ZAEHLER):
+    url = 'https://www.ogd.stadt-zuerich.ch/wfs/geoportal/Standorte_der_automatischen_Fuss__und_Velozaehlungen?service=WFS&version=1.1.0&request=GetFeature&outputFormat=GeoJSON&typename=view_eco_standorte'
+    response = requests.get(url)
+    json_response = response.json()
+    for entry in json_response.get('features', {}):
+        properties = entry.get('properties', {})
+        if properties.get('fk_zaehler', '') == FK_ZAEHLER:
+            name = properties.get('bezeichnung', FK_ZAEHLER)
+    return name
+
+
 def bike_layout_pipeline(sensor, url_Open_Data_Katalog):
     filters = {"FK_ZAEHLER": sensor}
     fields = ['VELO_IN', 'VELO_OUT', 'DATUM']
@@ -64,12 +75,12 @@ def bike_layout_pipeline(sensor, url_Open_Data_Katalog):
         counter_yesterday = 'Kann zZt. noch nicht dargestellt werden.'
     if counter_year == 0:
         counter_year = 'Kann zZt. noch nicht dargestellt werden.'
-
+    sensor_name = get_name_for_verkehrszaehlungs_sensor_id(sensor)
     return Response(
         json.dumps({
             "layout": 'bike',
             "sensor": sensor,
-            "title": f"Velozählstelle  {sensor} ToDo:Renaming",
+            "title": f"Velozählstelle  {sensor_name} ({sensor})",
             "description": "Das Tiefbauamt der Stadt Zürich erhebt seit 2009 die Velofrequenzen in der Stadt Zürich mit Hilfe automatischer Zählgeräte. Das Zählstellennetz umfasst derzeit 24 Zählgeräte. Die Messung erfolgt über im Boden eingelassene Induktionsschlaufen. Über Funk werden die Daten an einen Server übermittelt. Die Geräte sind vor dem Hintergrund des Datenschutzes unbedenklich, da lediglich Velofahrten gezählt und keine Daten über Nutzer oder Velos detektiert werden können. Die Daten der Zählgeräte werden via OpenData-Portal im Internet frei zugänglich gemacht.",
             "updated": datetime.datetime.strptime(json_records[-1]['DATUM'], "%Y-%m-%dT%H:%M").isoformat(),
             "gauges": [
