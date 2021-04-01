@@ -2,7 +2,9 @@
   <div class="content">
     <Header :simple="true" />
     <div class="text">
-      <h1 class="title">Digitale Transparenz im öffentlichen Raum</h1>
+      <h1 class="font-bold tracking-normal text-xl text-zueriblue px-4 pt-4">
+        Digitale Transparenz im öffentlichen Raum
+      </h1>
       <p>
         Daten spielen eine wichtige Rolle in der «Smart City Zürich». Dank ihnen
         kann beispielsweise die städtische Infrastruktur gezielt und effizient
@@ -114,14 +116,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="postcss">
 .content {
   display: flex;
   flex-direction: column;
-}
-
-h1.title {
-  @apply font-bold tracking-normal text-xl text-zueriblue px-4 pt-4;
 }
 
 p {

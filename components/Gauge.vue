@@ -10,11 +10,15 @@
 
 <script>
 export default {
-  props: ['label', 'value', 'unit'],
+  props: {
+    label: { type: String, default: '' },
+    value: { type: String, default: '...' },
+    unit: { type: String, default: '' },
+  },
 }
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .gauge {
   @apply text-white;
   min-height: 50vw;
