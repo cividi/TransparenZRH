@@ -14,6 +14,10 @@ Eine einfache Bildsprache informiert hierbei transparent über die Sammlung von 
 - [Python Notebook](https://github.com/Brieden/mixed/blob/main/stick-it-open.ipynb)
 - [D3 Notebook](https://observablehq.com/@n0rdlicht/transparenzrh)
 
+## Vorschau
+
+<img src="static/sensor-view-luftqualitaet.png" width="125px">
+
 ## Developer
 
 ### Stack
