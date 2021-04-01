@@ -18,18 +18,18 @@ module.exports = {
       zueriblue: {
         light: '#B4CCFF',
         DEFAULT: '#0F05A0',
-        dark: '#090036'
+        dark: '#090036',
       },
       orange: {
-        DEFAULT: '#DF4808'
+        DEFAULT: '#DF4808',
       },
       green: {
-        DEFAULT: '#2D9225'
+        DEFAULT: '#2D9225',
       },
       red: {
-        DEFAULT: '#B30058'
-      }
-    }  
+        DEFAULT: '#B30058',
+      },
+    },
   },
   variants: {
     extend: {},

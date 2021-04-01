@@ -35,13 +35,13 @@ export default {
       sensorData: {
         title: 'Lädt...',
         gauges: [
-          { label: '', unit: '', value: '' },
-          { label: '', unit: '', value: '' },
-          { label: '', unit: '', value: '' },
-          { label: '', unit: '', value: '' },
+          { label: '', unit: '', value: '...' },
+          { label: '', unit: '', value: '...' },
+          { label: '', unit: '', value: '...' },
+          { label: '', unit: '', value: '...' },
         ],
-        description: '',
-        updated: null,
+        description: ' ',
+        updated: ' ',
       },
       fetchUrl: [this.$route.params.layout, this.$route.params.sensor].join(
         '/'
@@ -99,7 +99,6 @@ export default {
     },
   },
   async mounted() {
-    console.log(this.fetchUrl)
     const fetchedData = await this.$axios.$get(this.fetchUrl)
     fetchedData.updated = new Intl.DateTimeFormat('de', {
       year: 'numeric',
