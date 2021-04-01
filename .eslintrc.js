@@ -7,8 +7,8 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint',
     rules: {
-      "object-shorthand": 1,
-    }
+      'object-shorthand': 1,
+    },
   },
   extends: [
     '@nuxtjs',

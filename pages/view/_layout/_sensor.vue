@@ -3,7 +3,7 @@
     <Header />
     <div>
       <h1 class="title">{{ sensorData.title }}</h1>
-      <div class="date" v-if="sensorData.updated">
+      <div v-if="sensorData.updated" class="date">
         <p>Datenstand: {{ sensorData.updated }}</p>
       </div>
       <div class="gaugegrid">

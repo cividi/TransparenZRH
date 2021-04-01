@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  props: ['label', 'value', 'unit'],
+  props: [{ label: String }, { value: String }, { unit: String }],
 }
 </script>
 
