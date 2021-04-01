@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .gauge {
   @apply text-white;
   min-height: 50vw;

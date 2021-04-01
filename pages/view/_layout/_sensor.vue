@@ -2,9 +2,11 @@
   <div class="content">
     <Header />
     <div>
-      <h1 class="title">{{ sensorData.title }}</h1>
-      <div v-if="sensorData.updated" class="date">
-        <p>Datenstand: {{ sensorData.updated }}</p>
+      <h1 class="font-bold tracking-normal text-xl text-zueriblue px-4 pt-4">
+        {{ sensorData.title }}
+      </h1>
+      <div v-if="sensorData.updated" class="text-sm text-coolgray">
+        <p class="px-4 py-2">Datenstand: {{ sensorData.updated }}</p>
       </div>
       <div class="gaugegrid">
         <Gauge
@@ -15,8 +17,9 @@
           :unit="gauge.unit"
         />
       </div>
+
       <div class="description">
-        <p>{{ sensorData.description }}</p>
+        <p class="px-4 py-2">{{ sensorData.description }}</p>
         <ul v-if="sensorData.links">
           <li v-for="(link, index) in sensorData.links" :key="index">
             <a :href="link.url" target="_blank">{{ link.text }}</a>
@@ -116,15 +119,7 @@ export default {
 </script>
 
 <!-- prettier-ignore -->
-<style>
-.container {
-  @apply justify-center items-center text-center mx-auto w-screen mt-12;
-}
-
-.date {
-  @apply text-sm text-coolgray;
-}
-
+<style lang="postcss">
 .gaugegrid {
   @apply grid grid-cols-2;
   align-items: center;
