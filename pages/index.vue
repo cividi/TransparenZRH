@@ -45,7 +45,73 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      title: 'Digitale Transparenz im öffentlichen Raum',
+      description:
+        'Mit zunehmender Datensammlung steigt die Bedeutung von Transparenz und Rechenschaftspflicht gegenüber der Öffentlichkeit. Die Stadt Zürich ist diesbezüglich bereits heute aktiv, indem sie viele Daten als «Open Data» veröffentlicht. In diesem Pilotprojekt von Smart City Zürich soll getestet werden, wie zusätzliche Transparenz geschaffen werden kann.',
+      image: '/favicon/icon.png',
+    }
+  },
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.description,
+        },
+        {
+          hid: 'twitter:title',
+          name: 'twitter:title',
+          content: this.title,
+        },
+        {
+          hid: 'twitter:description',
+          name: 'twitter:description',
+          content: this.description,
+        },
+        {
+          hid: 'twitter:image',
+          name: 'twitter:image',
+          content: this.image,
+        },
+        {
+          hid: 'twitter:image:alt',
+          name: 'twitter:image:alt',
+          content: this.title,
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: this.title,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.description,
+        },
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.image,
+        },
+        {
+          hid: 'og:image:secure_url',
+          property: 'og:image:secure_url',
+          content: this.image,
+        },
+        {
+          hid: 'og:image:alt',
+          property: 'og:image:alt',
+          content: this.title,
+        },
+      ],
+    }
+  },
+}
 </script>
 
 <style>
