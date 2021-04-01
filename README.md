@@ -22,6 +22,10 @@ Eine einfache Bildsprache informiert hierbei transparent über die Sammlung von 
 - Backend (`/api`)
   - Flask
 
+For testing and deployment add the following environment variables:
+
+- `API_URL`
+
 ### Run and Deploy
 
 ```bash
@@ -32,7 +36,7 @@ $ git clone git@github.com:cividi/TransparenZRH.git
 $ npm install
 
 # serve frontend and backend with hot reload at localhost:3000
-$ export API_URL=http://localhost:3000
+$ export API_URL=http://localhost:3000/api/v1/
 $ vercel dev # frontent only: npm run dev
 
 # build for production and launch server
