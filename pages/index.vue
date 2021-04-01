@@ -55,7 +55,7 @@ export default {}
 }
 
 h1.title {
-  @apply font-bold tracking-normal text-xl text-zueriblue px-4;
+  @apply font-bold tracking-normal text-xl text-zueriblue px-4 pt-4;
 }
 
 p {

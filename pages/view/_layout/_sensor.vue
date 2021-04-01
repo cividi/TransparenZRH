@@ -17,28 +17,9 @@
       </div>
       <div class="description">
         <p>{{ sensorData.description }}</p>
-        <ul>
-          <li>
-            <a
-              href="https://www.stadt-zuerich.ch/gud/de/index/umwelt_energie/luftqualitaet/messdaten.html"
-              target="_blank"
-              >Weitere Informationen und Daten zur Luftqualitätsmessung in der
-              Stadt Zürich</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://data.stadt-zuerich.ch/dataset/ugz_luftschadstoffmessung_stundenwerte"
-              target="_blank"
-              >Rohdaten auf data.stadt-zuerich.ch</a
-            >
-          </li>
-          <li>
-            <a
-              href="http://www.opendefinition.org/licenses/cc-zero"
-              target="_blank"
-              >Creative Commons CCZero Lizenz</a
-            >
+        <ul v-if="sensorData.links">
+          <li v-for="(link, index) in sensorData.links" :key="index">
+            <a :href="link.url" target="_blank">{{ link.text }}</a>
           </li>
         </ul>
       </div>
