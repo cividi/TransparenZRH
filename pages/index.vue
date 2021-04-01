@@ -2,15 +2,15 @@
   <div class="content">
     <Header :simple="true" />
     <div class="text">
-      <h1 class="title">Digitale Transparenz im öffentlichen Raum</h1>
+      <h1 class="font-bold tracking-normal text-xl text-zueriblue px-4 pt-4">
+        Digitale Transparenz im öffentlichen Raum
+      </h1>
       <p>
         Daten spielen eine wichtige Rolle in der «Smart City Zürich». Dank ihnen
         kann beispielsweise die städtische Infrastruktur gezielt und effizient
         geplant und unterhalten werden. Mittels Sensoren, welche
-        <NuxtLink to="/view/air/Zch_Stampfenbachstrasse"
-          >Fahrradfrequenzen</NuxtLink
-        >,
-        <NuxtLink to="/view/velo/2997">Luftqualität</NuxtLink>
+        Fahrradfrequenzen
+        <NuxtLink to="/view/air/Zch_Schimmelstrasse">Luftqualität</NuxtLink>
         und anderes messen, werden Daten im öffentlichen Raum erhoben.
       </p>
       <p>
@@ -47,20 +47,82 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      title: 'Digitale Transparenz im öffentlichen Raum',
+      description:
+        'Mit zunehmender Datensammlung steigt die Bedeutung von Transparenz und Rechenschaftspflicht gegenüber der Öffentlichkeit. Die Stadt Zürich ist diesbezüglich bereits heute aktiv, indem sie viele Daten als «Open Data» veröffentlicht. In diesem Pilotprojekt von Smart City Zürich soll getestet werden, wie zusätzliche Transparenz geschaffen werden kann.',
+      image: '/favicon/icon.png',
+    }
+  },
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.description,
+        },
+        {
+          hid: 'twitter:title',
+          name: 'twitter:title',
+          content: this.title,
+        },
+        {
+          hid: 'twitter:description',
+          name: 'twitter:description',
+          content: this.description,
+        },
+        {
+          hid: 'twitter:image',
+          name: 'twitter:image',
+          content: this.image,
+        },
+        {
+          hid: 'twitter:image:alt',
+          name: 'twitter:image:alt',
+          content: this.title,
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: this.title,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.description,
+        },
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.image,
+        },
+        {
+          hid: 'og:image:secure_url',
+          property: 'og:image:secure_url',
+          content: this.image,
+        },
+        {
+          hid: 'og:image:alt',
+          property: 'og:image:alt',
+          content: this.title,
+        },
+      ],
+    }
+  },
+}
 </script>
 
-<style>
+<style lang="postcss">
 .content {
   display: flex;
   flex-direction: column;
 }
 
-.title {
-  @apply font-bold tracking-normal text-xl text-zueriblue p-4;
-}
-
 p {
-  @apply p-4;
+  @apply px-4 py-2;
 }
 </style>

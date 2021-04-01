@@ -7,8 +7,8 @@
   </footer>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 footer {
-  @apply relative bottom-0 text-sm text-coolgray block p-5;
+  @apply relative bottom-0 text-sm text-coolgray block p-4;
 }
 </style>

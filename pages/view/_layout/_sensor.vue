@@ -2,7 +2,12 @@
   <div class="content">
     <Header />
     <div>
-      <h1 class="title">{{ sensorData.title }}</h1>
+      <h1 class="font-bold tracking-normal text-xl text-zueriblue px-4 pt-4">
+        {{ sensorData.title }}
+      </h1>
+      <div v-if="sensorData.updated" class="text-sm text-coolgray">
+        <p class="px-4 py-2">Datenstand: {{ sensorData.updated }}</p>
+      </div>
       <div class="gaugegrid">
         <Gauge
           v-for="gauge in sensorData.gauges"
@@ -12,8 +17,14 @@
           :unit="gauge.unit"
         />
       </div>
+
       <div class="description">
-        <p>{{ sensorData.description }}</p>
+        <p class="px-4 py-2">{{ sensorData.description }}</p>
+        <ul v-if="sensorData.links">
+          <li v-for="(link, index) in sensorData.links" :key="index">
+            <a :href="link.url" target="_blank">{{ link.text }}</a>
+          </li>
+        </ul>
       </div>
     </div>
     <Footer />
@@ -24,32 +35,91 @@
 export default {
   data() {
     return {
-      sensorData: { title: 'Lädt...', gauges: [], description: '' },
+      sensorData: {
+        title: 'Lädt...',
+        gauges: [
+          { label: '', unit: '', value: '...' },
+          { label: '', unit: '', value: '...' },
+          { label: '', unit: '', value: '...' },
+          { label: '', unit: '', value: '...' },
+        ],
+        description: ' ',
+        updated: ' ',
+      },
       fetchUrl: [this.$route.params.layout, this.$route.params.sensor].join(
         '/'
       ),
     }
   },
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.description,
+        },
+        {
+          hid: 'twitter:title',
+          name: 'twitter:title',
+          content: this.title,
+        },
+        {
+          hid: 'twitter:description',
+          name: 'twitter:description',
+          content: this.description,
+        },
+        {
+          hid: 'twitter:image:alt',
+          name: 'twitter:image:alt',
+          content: this.title,
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: this.title,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.description,
+        },
+        {
+          hid: 'og:image:alt',
+          property: 'og:image:alt',
+          content: this.title,
+        },
+      ],
+    }
+  },
+  computed: {
+    title: () => {
+      return `Sensor – Digitale Transparenz im öffentlichen Raum`
+    },
+    description: () => {
+      return 'Aktuell ausgelesene Sensorwerte und weitere Details.'
+    },
+  },
   async mounted() {
-    console.log(this.fetchUrl)
-    const fetchedData = await this.$axios
-      .$get(this.fetchUrl)
-      .then((response) => (this.info = response))
+    const fetchedData = await this.$axios.$get(this.fetchUrl)
+    fetchedData.updated = new Intl.DateTimeFormat('de', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      timeZone: 'Europe/Zurich',
+      timeZoneName: 'short',
+      hour12: false,
+    }).format(Date.parse(fetchedData.updated))
     this.sensorData = fetchedData
   },
 }
 </script>
 
 <!-- prettier-ignore -->
-<style>
-.container {
-  @apply justify-center items-center text-center mx-auto w-screen mt-12;
-}
-
-.title {
-  @apply block font-normal tracking-normal text-xl font-bold p-5;
-}
-
+<style lang="postcss">
 .gaugegrid {
   @apply grid grid-cols-2;
   align-items: center;
@@ -58,6 +128,18 @@ export default {
 }
 
 .description {
-  @apply p-5 text-sm text-coolgray;
+  @apply text-sm text-coolgray;
+}
+
+.description ul {
+  @apply p-4;
+}
+
+.description ul li {
+  @apply pb-2;
+}
+
+.description ul li a {
+  @apply border-zueriblue border block py-1 px-2 rounded;
 }
 </style>

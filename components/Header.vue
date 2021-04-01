@@ -26,7 +26,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 header {
   /* @apply fixed top-0 w-screen h-12 bg-zueriblue text-white; */
 }
