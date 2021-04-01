@@ -94,11 +94,11 @@ def bike_layout_pipeline(sensor, url_Open_Data_Katalog):
                     "unit": ''
                 }
             ],
-            "links":
+            "links": [
                 {
-                "url": "https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/resource/ebe5e78c-a99f-4607-bedc-051f33d75318",
-                "text": "Rohdaten auf data.stadt-zuerich.ch"
-            },
+                    "url": "https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/resource/ebe5e78c-a99f-4607-bedc-051f33d75318",
+                    "text": "Rohdaten auf data.stadt-zuerich.ch"
+                }]
         },),
         mimetype='application/json',
         status=200)
@@ -163,11 +163,11 @@ def air_layout_pipeline(sensor, url_Open_Data_Katalog):
                     "unit": PM10_unit
                 }
             ],
-            "links":
+            "links": [
                 {
                     "url": "https://data.stadt-zuerich.ch/dataset/ugz_luftschadstoffmessung_stundenwerte/resource/4466ec4a-b215-4134-8973-2f360e53c33d",
                     "text": "Rohdaten auf data.stadt-zuerich.ch"
-            },
+                }]
         },),
         mimetype='application/json',
         status=200)
