@@ -21,6 +21,48 @@ def get_name_for_verkehrszaehlungs_sensor_id(FK_ZAEHLER):
     return name
 
 
+def cctv_layout_pipeline(sensor, url_Open_Data_Katalog):
+
+    layout = {
+        "layout": 'bike',
+        "sensor": sensor,
+        "title": f"Videoüberwachung – unbekannte Kamera",
+        "description": "Die angegebene Kamera konnte nicht gefunden werden.",
+        "updated": datetime.datetime.now().isoformat(),
+        "gauges": [],
+        "links": [],
+    }
+
+    if sensor == "Hardau_II":
+        layout["title"] = "Videoüberwachung Wohnsiedlung Hardau II"
+        layout["gauges"] = [
+            {
+                "label": 'Standort',
+                "value": 'Wohnsiedlung Hardau II',
+                "unit": '',
+            },
+            {
+                "label": 'Aufberwahrungsdauer',
+                "value": 7,
+                "unit": 'Tage',
+            },
+            {
+                "label": 'Was wird überwacht?',
+                "value": 'Lifte: Innenbereich',
+                "unit": '',
+            },
+            {
+                "label": 'Verantwortliche Dienstabteilung',
+                "value": 'Liegenschaften Stadt Zürich (LSZ)',
+                "unit": ''
+            }]
+
+    return Response(
+        json.dumps(layout),
+        mimetype='application/json',
+        status=200)
+
+
 def bike_layout_pipeline(sensor, url_Open_Data_Katalog):
     filters = {"FK_ZAEHLER": sensor}
     fields = ['VELO_IN', 'VELO_OUT', 'DATUM']
@@ -189,7 +231,7 @@ def unknown_layout_pipeline(layout, sensor):
         json.dumps({
             "layout": layout,
             "sensor": sensor,
-            "titel": "Unknown layout",
+            "title": "unknown",
             "updated": datetime.datetime.now().isoformat(),
         },),
         mimetype='application/json',
@@ -205,5 +247,7 @@ def api(layout, sensor):
         return air_layout_pipeline(sensor, url_Open_Data_Katalog)
     elif layout == 'bike':
         return bike_layout_pipeline(sensor, url_Open_Data_Katalog)
+    elif layout == 'cctv':
+        return cctv_layout_pipeline(sensor, url_Open_Data_Katalog)
     else:
         return unknown_layout_pipeline(layout, sensor)
