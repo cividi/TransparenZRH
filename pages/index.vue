@@ -43,6 +43,19 @@
         der Stadt Zürich gerne zur Verfügung.
       </p>
       <p>maximilian [punkt] stern [at] zuerich [punkt] ch</p>
+      <p>
+        Ein Civic Tech Prototyp entwickelt von
+        <a href="https://www.cividi.ch" target="_blank">cividi</a>, unterstützt
+        durch
+        <a
+          href="https://www.stadt-zuerich.ch/prd/de/index/stadtentwicklung/smart-city.html"
+          target="_blank"
+          >Smart City Stadt Zürich</a
+        >
+        verfügbar als
+        <a href="https://github.com/cividi/transparenzrh">Open Source</a>
+        auf GitHub.
+      </p>
     </div>
   </div>
 </template>
