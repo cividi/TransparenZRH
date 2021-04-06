@@ -9,15 +9,16 @@ app.url_map.strict_slashes = False
 cors = CORS(app)
 
 
-def get_name_for_verkehrszaehlungs_sensor_id(FK_ZAEHLER):
+def get_verkehrszaehlungs_sensor_id(abkuerzung):
     url = 'https://www.ogd.stadt-zuerich.ch/wfs/geoportal/Standorte_der_automatischen_Fuss__und_Velozaehlungen?service=WFS&version=1.1.0&request=GetFeature&outputFormat=GeoJSON&typename=view_eco_standorte'
     response = requests.get(url)
     json_response = response.json()
     for entry in json_response.get('features', {}):
         properties = entry.get('properties', {})
-        if properties.get('fk_zaehler', '') == FK_ZAEHLER:
-            name = properties.get('bezeichnung', FK_ZAEHLER)
-    return name
+        if properties.get('abkuerzung', '') == abkuerzung and properties.get('bis', abkuerzung) is None:
+            name = properties.get('bezeichnung', abkuerzung)
+            fk_zaehler = properties.get('fk_zaehler', abkuerzung)
+    return {"name": name, "fk_zaehler": fk_zaehler}
 
 
 def camera_layout_pipeline(sensor, url_Open_Data_Katalog):
@@ -34,11 +35,12 @@ def camera_layout_pipeline(sensor, url_Open_Data_Katalog):
 
     if sensor == "Hardau_II":
         layout["title"] = "Videoüberwachung Wohnsiedlung Hardau II"
+        layout["description"] = ""
         layout["gauges"] = [
             {
                 "label": 'Standort',
-                "value": 'Wohnsiedlung Hardau II',
-                "unit": '',
+                "value": 'Hardau II',
+                "unit": 'Wohnsiedlung',
             },
             {
                 "label": 'Aufberwahrungsdauer',
@@ -47,13 +49,13 @@ def camera_layout_pipeline(sensor, url_Open_Data_Katalog):
             },
             {
                 "label": 'Was wird überwacht?',
-                "value": 'Lifte: Innenbereich',
-                "unit": '',
+                "value": 'Lifte',
+                "unit": 'Innenbereich',
             },
             {
                 "label": 'Verantwortliche Dienstabteilung',
-                "value": 'Liegenschaften Stadt Zürich (LSZ)',
-                "unit": ''
+                "value": 'LSZ',
+                "unit": 'Liegenschaften Stadt Zürich'
             }]
 
     return Response(
@@ -62,8 +64,12 @@ def camera_layout_pipeline(sensor, url_Open_Data_Katalog):
         status=200)
 
 
-def bike_layout_pipeline(sensor, url_Open_Data_Katalog):
-    filters = {"FK_ZAEHLER": sensor}
+def bike_layout_pipeline(sensor_, url_Open_Data_Katalog):
+    no_value = 'n.v.'
+
+    sensor = get_verkehrszaehlungs_sensor_id(sensor_)
+
+    filters = {"FK_ZAEHLER": sensor['fk_zaehler']}
     fields = ['VELO_IN', 'VELO_OUT', 'DATUM']
     load_params = {'resource_id': 'ebe5e78c-a99f-4607-bedc-051f33d75318',
                    'fields': ', '.join(fields),
@@ -108,48 +114,56 @@ def bike_layout_pipeline(sensor, url_Open_Data_Katalog):
             list_of_all_counts)/len(list_of_all_counts)
         mean_per_day = int(mean_per_15Min_over_all * 24 * 60 / 15)
     else:
-        mean_per_day = 'Kann zZt. noch nicht dargestellt werden.'
+        mean_per_day = no_value
 
     if counter_today == 0:
-        counter_today = 'Kann zZt. noch nicht dargestellt werden.'
+        counter_today = no_value
     if counter_yesterday == 0:
-        counter_yesterday = 'Kann zZt. noch nicht dargestellt werden.'
+        counter_yesterday = no_value
     if counter_year == 0:
-        counter_year = 'Kann zZt. noch nicht dargestellt werden.'
-    sensor_name = get_name_for_verkehrszaehlungs_sensor_id(sensor)
+        counter_year = no_value
+
     return Response(
         json.dumps({
             "layout": 'bike',
             "sensor": sensor,
-            "title": f"Velozählstelle  {sensor_name} ({sensor})",
+            "title": f"Velozählstelle {sensor['name']} ({sensor_})",
             "description": "Das Tiefbauamt der Stadt Zürich erhebt seit 2009 die Velofrequenzen in der Stadt Zürich mit Hilfe automatischer Zählgeräte. Das Zählstellennetz umfasst derzeit 24 Zählgeräte. Die Messung erfolgt über im Boden eingelassene Induktionsschlaufen. Über Funk werden die Daten an einen Server übermittelt. Die Geräte sind vor dem Hintergrund des Datenschutzes unbedenklich, da lediglich Velofahrten gezählt und keine Daten über Nutzer oder Velos detektiert werden können. Die Daten der Zählgeräte werden via OpenData-Portal im Internet frei zugänglich gemacht.",
             "updated": datetime.datetime.strptime(json_records[-1]['DATUM'], "%Y-%m-%dT%H:%M").isoformat(),
             "gauges": [
                 {
-                    "label": 'Anzahl Velos gestern',
+                    "label": 'Gestern',
                     "value": counter_yesterday,
-                    "unit": ''
+                    "unit": 'Velos'
                 },
                 {
-                    "label": 'Durchschnittliche Velos pro Tag',
+                    "label": 'Tagesdurchschnitt',
                     "value": mean_per_day,
-                    "unit": ''
+                    "unit": 'Velos'
                 },
                 {
-                    "label": 'Total Velos seit Jahresbeginn',
+                    "label": 'Seit Jahresbeginn',
                     "value": counter_year,
-                    "unit": ''
+                    "unit": 'Velos'
                 },
                 {
-                    "label": 'Anzahl Velos heute',
+                    "label": 'Heute',
                     "value": counter_today,
-                    "unit": ''
+                    "unit": 'Velos'
                 }
             ],
             "links": [
                 {
                     "url": "https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/resource/ebe5e78c-a99f-4607-bedc-051f33d75318",
                     "text": "Rohdaten auf data.stadt-zuerich.ch"
+                },
+                {
+                    "url": "https://www.stadt-zuerich.ch/ted/de/index/taz/verkehr/webartikel/webartikel_velozaehlungen.html",
+                    "text": "Weitere Informationen und Daten zu Velozählungen in der Stadt Zürich"
+                },
+                {
+                    "url": "http://www.opendefinition.org/licenses/cc-zero",
+                    "text": "Creative Commons CCZero Lizenz"
                 }]
         },),
         mimetype='application/json',
@@ -219,7 +233,16 @@ def air_layout_pipeline(sensor, url_Open_Data_Katalog):
                 {
                     "url": "https://data.stadt-zuerich.ch/dataset/ugz_luftschadstoffmessung_stundenwerte/resource/4466ec4a-b215-4134-8973-2f360e53c33d",
                     "text": "Rohdaten auf data.stadt-zuerich.ch"
-                }]
+                },
+                {
+                    "url": "https://www.stadt-zuerich.ch/gud/de/index/umwelt_energie/luftqualitaet/messdaten.html",
+                    "text": "Weitere Informationen und Daten zur Luftqualitätsmessung in der Stadt Zürich"
+                },
+                {
+                    "url": "http://www.opendefinition.org/licenses/cc-zero",
+                    "text": "Creative Commons CCZero Lizenz"
+                }
+            ]
         },),
         mimetype='application/json',
         status=200)
