@@ -43,7 +43,7 @@ def camera_layout_pipeline(sensor, url_Open_Data_Katalog):
                 "unit": 'Wohnsiedlung',
             },
             {
-                "label": 'Aufberwahrungsdauer',
+                "label": 'Aufbewahrungsdauer',
                 "value": 7,
                 "unit": 'Tage',
             },
@@ -64,13 +64,59 @@ def camera_layout_pipeline(sensor, url_Open_Data_Katalog):
         status=200)
 
 
-def bike_layout_pipeline(sensor_, url_Open_Data_Katalog):
+def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
     no_value = 'n.v.'
-
     sensor = get_verkehrszaehlungs_sensor_id(sensor_)
 
+    layout = {
+        "layout": '',
+        "sensor": sensor,
+        "title": '',
+        "description": '',
+        "updated": '',
+        "gauges": [],
+        "links": []
+    }
+
     filters = {"FK_ZAEHLER": sensor['fk_zaehler']}
-    fields = ['VELO_IN', 'VELO_OUT', 'DATUM']
+    if type_ == "bike":
+        unit = "Velos"
+        fields = ['VELO_IN', 'VELO_OUT', 'DATUM']
+        layout["title"] = f"Velozählstelle {sensor['name']} ({sensor_})"
+        layout['description'] = "Das Tiefbauamt der Stadt Zürich erhebt seit 2009 die Velofrequenzen in der Stadt Zürich mit Hilfe automatischer Zählgeräte. Das Zählstellennetz umfasst derzeit 24 Zählgeräte. Die Messung erfolgt über im Boden eingelassene Induktionsschlaufen. Über Funk werden die Daten an einen Server übermittelt. Die Geräte sind vor dem Hintergrund des Datenschutzes unbedenklich, da lediglich Velofahrten gezählt und keine Daten über Nutzer oder Velos detektiert werden können. Die Daten der Zählgeräte werden via OpenData-Portal im Internet frei zugänglich gemacht."
+        layout["links"] = [
+            {
+                "url": "https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/resource/ebe5e78c-a99f-4607-bedc-051f33d75318",
+                "text": "Rohdaten auf data.stadt-zuerich.ch"
+            },
+            {
+                "url": "https://www.stadt-zuerich.ch/ted/de/index/taz/verkehr/webartikel/webartikel_velozaehlungen.html",
+                "text": "Weitere Informationen und Daten zu Velozählungen in der Stadt Zürich"
+            },
+            {
+                "url": "http://www.opendefinition.org/licenses/cc-zero",
+                "text": "Creative Commons CCZero Lizenz"
+            }]
+    else:
+        unit = "Personen"
+        fields = ['FUSS_IN', 'FUSS_OUT', 'DATUM']
+        layout["title"] = f"Fussgängerzählstelle {sensor['name']} ({sensor_})"
+        layout["description"] = "Seit 2013 werden die Frequenzen des Fussverkehrs automatisch erfasst. Derzeit sind 18 Zählgeräte in Betrieb. Die Frequenzen des Fussverkehrs werden von den Zählgeräten mittels passiver Infrarotstrahlung erhoben. Die damit erhobenen Daten bilden eine wichtige quantitative Grundlage zur Beurteilung der Entwicklung des Fussverkehrs auf dem Stadtgebiet. Die Daten der Zählgeräte werden via OpenData-Portal im Internet zugänglich gemacht."
+        layout["links"] = [
+            {
+                "url": "https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/resource/ebe5e78c-a99f-4607-bedc-051f33d75318",
+                "text": "Rohdaten auf data.stadt-zuerich.ch"
+            },
+            {
+                "url": "https://www.stadt-zuerich.ch/ted/de/index/taz/verkehr/webartikel/webartikel_fussverkehrszaehlung.html",
+                "text": "Weitere Informationen und Daten zu Fussgängerzählungen in der Stadt Zürich"
+            },
+            {
+                "url": "http://www.opendefinition.org/licenses/cc-zero",
+                "text": "Creative Commons CCZero Lizenz"
+            }
+        ]
+
     load_params = {'resource_id': 'ebe5e78c-a99f-4607-bedc-051f33d75318',
                    'fields': ', '.join(fields),
                    'filters': json.dumps(filters),
@@ -97,16 +143,19 @@ def bike_layout_pipeline(sensor_, url_Open_Data_Katalog):
     yesterday = today - datetime.timedelta(days=1)
     for entry in json_records:
         entrys_date = parser.isoparse(entry['DATUM']).date()
-        velo_in, velo_out = entry['VELO_IN'], entry['VELO_OUT']
-        if type(velo_in) != str:
-            velo_in = 0
-        if type(velo_out) != str:
-            velo_out = 0
+        if type_ == "bike":
+            in_, out_ = entry['VELO_IN'], entry['VELO_OUT']
+        else:
+            in_, out_ = entry['FUSS_IN'], entry['FUSS_OUT']
+        if type(in_) != str:
+            in_ = 0
+        if type(out_) != str:
+            out_ = 0
         if entrys_date == yesterday:
-            counter_yesterday += int(velo_in) + int(velo_out)
+            counter_yesterday += int(in_) + int(out_)
         if entrys_date == today:
-            counter_today += int(velo_in) + int(velo_out)
-        list_of_all_counts.append(int(velo_in) + int(velo_out))
+            counter_today += int(in_) + int(out_)
+        list_of_all_counts.append(int(in_) + int(out_))
 
     counter_year = sum(list_of_all_counts)
     if len(list_of_all_counts) > 0:
@@ -123,55 +172,39 @@ def bike_layout_pipeline(sensor_, url_Open_Data_Katalog):
     if counter_year == 0:
         counter_year = no_value
 
+    layout["updated"] = datetime.datetime.strptime(
+        json_records[-1]['DATUM'], "%Y-%m-%dT%H:%M").isoformat()
+
+    layout["gauges"] = [
+        {
+            "label": 'Gestern',
+            "value": counter_yesterday,
+            "unit": unit
+        },
+        {
+            "label": 'Tagesdurchschnitt',
+            "value": mean_per_day,
+            "unit": unit
+        },
+        {
+            "label": 'Seit Jahresbeginn',
+            "value": counter_year,
+            "unit": unit
+        },
+        {
+            "label": 'Heute',
+            "value": counter_today,
+            "unit": unit
+        }
+    ]
+
     return Response(
-        json.dumps({
-            "layout": 'bike',
-            "sensor": sensor,
-            "title": f"Velozählstelle {sensor['name']} ({sensor_})",
-            "description": "Das Tiefbauamt der Stadt Zürich erhebt seit 2009 die Velofrequenzen in der Stadt Zürich mit Hilfe automatischer Zählgeräte. Das Zählstellennetz umfasst derzeit 24 Zählgeräte. Die Messung erfolgt über im Boden eingelassene Induktionsschlaufen. Über Funk werden die Daten an einen Server übermittelt. Die Geräte sind vor dem Hintergrund des Datenschutzes unbedenklich, da lediglich Velofahrten gezählt und keine Daten über Nutzer oder Velos detektiert werden können. Die Daten der Zählgeräte werden via OpenData-Portal im Internet frei zugänglich gemacht.",
-            "updated": datetime.datetime.strptime(json_records[-1]['DATUM'], "%Y-%m-%dT%H:%M").isoformat(),
-            "gauges": [
-                {
-                    "label": 'Gestern',
-                    "value": counter_yesterday,
-                    "unit": 'Velos'
-                },
-                {
-                    "label": 'Tagesdurchschnitt',
-                    "value": mean_per_day,
-                    "unit": 'Velos'
-                },
-                {
-                    "label": 'Seit Jahresbeginn',
-                    "value": counter_year,
-                    "unit": 'Velos'
-                },
-                {
-                    "label": 'Heute',
-                    "value": counter_today,
-                    "unit": 'Velos'
-                }
-            ],
-            "links": [
-                {
-                    "url": "https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/resource/ebe5e78c-a99f-4607-bedc-051f33d75318",
-                    "text": "Rohdaten auf data.stadt-zuerich.ch"
-                },
-                {
-                    "url": "https://www.stadt-zuerich.ch/ted/de/index/taz/verkehr/webartikel/webartikel_velozaehlungen.html",
-                    "text": "Weitere Informationen und Daten zu Velozählungen in der Stadt Zürich"
-                },
-                {
-                    "url": "http://www.opendefinition.org/licenses/cc-zero",
-                    "text": "Creative Commons CCZero Lizenz"
-                }]
-        },),
+        json.dumps(layout),
         mimetype='application/json',
         status=200)
 
 
 def air_layout_pipeline(sensor, url_Open_Data_Katalog):
-    # sensor = 'Zch_Stampfenbachstrasse'
     filters = {"Standort": sensor}
     load_params = {'resource_id': '4466ec4a-b215-4134-8973-2f360e53c33d',
                    "sort": 'Datum desc',
@@ -268,7 +301,9 @@ def api(layout, sensor):
     if layout == 'air':
         return air_layout_pipeline(sensor, url_Open_Data_Katalog)
     elif layout == 'bike':
-        return bike_layout_pipeline(sensor, url_Open_Data_Katalog)
+        return counter_layout_pipeline(sensor, url_Open_Data_Katalog, 'bike')
+    elif layout == 'pedestrian':
+        return counter_layout_pipeline(sensor, url_Open_Data_Katalog, 'pedestrian')
     elif layout == 'camera':
         return camera_layout_pipeline(sensor, url_Open_Data_Katalog)
     else:
