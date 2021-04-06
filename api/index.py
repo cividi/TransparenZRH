@@ -1,4 +1,3 @@
-from frictionless import Package, Layout, transform, steps
 import requests
 import datetime
 from dateutil import parser
@@ -21,7 +20,7 @@ def get_name_for_verkehrszaehlungs_sensor_id(FK_ZAEHLER):
     return name
 
 
-def cctv_layout_pipeline(sensor, url_Open_Data_Katalog):
+def camera_layout_pipeline(sensor, url_Open_Data_Katalog):
 
     layout = {
         "layout": 'bike',
@@ -247,7 +246,7 @@ def api(layout, sensor):
         return air_layout_pipeline(sensor, url_Open_Data_Katalog)
     elif layout == 'bike':
         return bike_layout_pipeline(sensor, url_Open_Data_Katalog)
-    elif layout == 'cctv':
-        return cctv_layout_pipeline(sensor, url_Open_Data_Katalog)
+    elif layout == 'camera':
+        return camera_layout_pipeline(sensor, url_Open_Data_Katalog)
     else:
         return unknown_layout_pipeline(layout, sensor)
