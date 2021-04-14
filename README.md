@@ -20,13 +20,16 @@ Eine einfache Bildsprache informiert hierbei transparent über die Sammlung von 
 
 ## Developer
 
-### Stack
+### Architecture Proof of Concept
 
-- Frontends
-  - Nuxt.js
+<img src="static/PoC-architecture.svg" alt="PoC tech architecture" />
+
+- Frontend
+  - SSR via Nuxt.js
   - TailwindCSS
-- Backend (`/api`)
-  - Flask
+- Backend (see `/api`)
+  - Flask based "serverless" function
+  - Querying [CKAN DataStore API](https://docs.ckan.org/en/latest/maintaining/datastore.html)
 
 For testing and deployment add the following environment variables:
 
