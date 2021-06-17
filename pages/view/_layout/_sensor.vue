@@ -1,10 +1,6 @@
 <template>
   <div class="content">
-    <Header />
     <div>
-      <h1 class="font-bold tracking-normal text-xl text-zueriblue px-4 pt-4">
-        {{ sensorData.title }}
-      </h1>
       <div v-if="sensorData.updated" class="text-sm text-coolgray">
         <p class="px-4 py-2">Datenstand: {{ sensorData.updated }}</p>
       </div>
@@ -17,17 +13,7 @@
           :unit="gauge.unit"
         />
       </div>
-
-      <div class="description">
-        <p class="px-4 py-2">{{ sensorData.description }}</p>
-        <ul v-if="sensorData.links">
-          <li v-for="(link, index) in sensorData.links" :key="index">
-            <a :href="link.url" target="_blank">{{ link.text }}</a>
-          </li>
-        </ul>
-      </div>
     </div>
-    <Footer />
   </div>
 </template>
 
