@@ -24,7 +24,7 @@ def get_verkehrszaehlungs_sensor_id(abkuerzung):
 def camera_layout_pipeline(sensor, url_Open_Data_Katalog):
 
     layout = {
-        "layout": 'bike',
+        "layout": 'camera',
         "sensor": sensor,
         "title": f"Videoüberwachung – unbekannte Kamera",
         "description": "Die angegebene Kamera konnte nicht gefunden werden.",
@@ -69,9 +69,9 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
     sensor = get_verkehrszaehlungs_sensor_id(sensor_)
 
     layout = {
-        "layout": '',
+        "layout": type_,
         "sensor": sensor['name'],
-        "title": type_,
+        "title": '',
         "description": '',
         "updated": '',
         "gauges": [],
