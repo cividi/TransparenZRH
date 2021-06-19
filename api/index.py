@@ -70,8 +70,8 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
 
     layout = {
         "layout": '',
-        "sensor": sensor,
-        "title": '',
+        "sensor": sensor['name'],
+        "title": type_,
         "description": '',
         "updated": '',
         "gauges": [],
