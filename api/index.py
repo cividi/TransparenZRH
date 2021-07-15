@@ -119,6 +119,7 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
 
     load_params = {'resource_id': 'ebe5e78c-a99f-4607-bedc-051f33d75318',
                    'fields': ', '.join(fields),
+                   'sort': 'DATUM asc',
                    'filters': json.dumps(filters),
                    'limit': 32000,
                    }
