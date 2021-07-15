@@ -14,9 +14,9 @@ export default {
     ],
     script: [
       {
-        src: "https://www.stadt-zuerich.ch/etc/clientlibs/stzh/iframeResizer/iframeResizer.contentWindow.min.js",
+        src: 'https://www.stadt-zuerich.ch/etc/clientlibs/stzh/iframeResizer/iframeResizer.contentWindow.min.js',
         body: true,
-      }
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon/favicon.ico' },
