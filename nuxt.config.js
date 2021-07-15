@@ -12,6 +12,12 @@ export default {
       { name: 'msapplication-TileColor', content: '#B4CCFF' },
       { name: 'theme-color', content: '#ffffff' },
     ],
+    script: [
+      {
+        src: 'https://www.stadt-zuerich.ch/etc/clientlibs/stzh/iframeResizer/iframeResizer.contentWindow.min.js',
+        body: true,
+      },
+    ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon/favicon.ico' },
       { rel: 'shortcut icon', href: '/favicon/favicon.ico' },
