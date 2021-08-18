@@ -139,9 +139,10 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
     else:
         print('response not correct structure')
 
-    counter_today, counter_yesterday, list_of_all_counts = 0, 0, []
+    counter_today, counter_yesterday, seven_days, list_of_all_counts = 0, 0, [], []
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
+    lastweek = today - datetime.timedelta(days=7)
     for entry in json_records:
         entrys_date = parser.isoparse(entry['DATUM']).date()
         if type_ == "bike":
@@ -156,6 +157,8 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
             counter_yesterday += int(in_) + int(out_)
         if entrys_date == today:
             counter_today += int(in_) + int(out_)
+        if entrys_date >= lastweek:
+            seven_days.append(int(in_) + int(out_))
         list_of_all_counts.append(int(in_) + int(out_))
 
     counter_year = sum(list_of_all_counts)
@@ -165,6 +168,13 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
         mean_per_day = int(mean_per_15Min_over_all * 24 * 60 / 15)
     else:
         mean_per_day = no_value
+
+    if len(seven_days) > 0:
+        mean_per_15Min_rolling = sum(
+            seven_days)/len(seven_days)
+        mean_rolling = int(mean_per_15Min_rolling * 24 * 60 / 15)
+    else:
+        mean_rolling = no_value
 
     if counter_today == 0:
         counter_today = no_value
@@ -183,7 +193,7 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
             "unit": unit
         },
         {
-            "label": 'Tagesdurchschnitt',
+            "label": 'Tagesdurchschnitt seit Jahresbeginn',
             "value": mean_per_day,
             "unit": unit
         },
@@ -193,8 +203,8 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
             "unit": unit
         },
         {
-            "label": 'Heute',
-            "value": counter_today,
+            "label": 'Tagesdurchschnitt letzte 7 Tage',
+            "value": mean_rolling,
             "unit": unit
         }
     ]
