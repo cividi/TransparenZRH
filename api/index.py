@@ -122,7 +122,7 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
                    'sort': 'DATUM asc',
                    'filters': json.dumps(filters),
                    'limit': 32000,
-                   'include_total': False,
+                   'include_total': False
                    }
 
     response = requests.get(url_Open_Data_Katalog, params=load_params)
