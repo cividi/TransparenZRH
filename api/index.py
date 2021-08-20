@@ -122,6 +122,7 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
                    'sort': 'DATUM asc',
                    'filters': json.dumps(filters),
                    'limit': 32000,
+                   'include_total': False,
                    }
 
     response = requests.get(url_Open_Data_Katalog, params=load_params)
@@ -220,7 +221,8 @@ def air_layout_pipeline(sensor, url_Open_Data_Katalog):
     load_params = {'resource_id': '4466ec4a-b215-4134-8973-2f360e53c33d',
                    "sort": 'Datum desc',
                    "limit": 9,
-                   "filters": json.dumps(filters)
+                   "filters": json.dumps(filters),
+                   'include_total': False
                    }
 
     response = requests.get(url_Open_Data_Katalog, params=load_params)
