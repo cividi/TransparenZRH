@@ -90,3 +90,5 @@ sw.*
 *.swp
 
 .vercel
+venv
+__pycache__
