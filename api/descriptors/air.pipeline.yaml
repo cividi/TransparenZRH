@@ -1,0 +1,71 @@
+tasks:
+  - type: package
+    steps:
+      - code: resource-transform
+        name: data
+        steps:
+          - code: table-normalize
+          - code: field-remove
+            names:
+              - Standort
+              - Intervall
+              - Status
+          - code: row-filter
+            formula: Parameter == 'NO2' or Parameter == 'PM10' or Parameter == 'O3'
+          - code: row-slice
+            head: 3
+          - code: table-normalize
+    source: 
+      name: air-{{params.sensor_id}}
+      title: Luftqualität {{params.sensor_name}}
+      description: Die ersten systematischen Messungen der Luftqualität begannen in Zürich bereits Anfang der 1980er Jahre, weshalb wir auf eine der längsten Datenreihen der Schweiz zurückblicken können. Die Daten der Messtationen werden via OpenData-Portal im Internet zugänglich gemacht.
+      sources:
+        - path: "{{params.ckan_url}}/dataset/ugz_luftschadstoffmessung_stundenwerte/resource/4466ec4a-b215-4134-8973-2f360e53c33d"
+          title: Rohdaten auf data.stadt-zuerich.ch
+        - path: https://www.stadt-zuerich.ch/gud/de/index/umwelt_energie/luftqualitaet/messdaten.html
+          title: Weitere Informationen und Daten zur Luftqualitätsmessung in der Stadt Zürich
+      licenses:
+        - title: Creative Commons CCZero Lizenz
+          name: CC0
+          path: http://www.opendefinition.org/licenses/cc-zero
+      resources:
+        - path: {{params.ckan_url}}
+          name: data
+          format: ckan
+          schema:
+            fields:
+              - name: Datum
+                type: datetime
+              - name: Parameter
+                type: string
+              - name: Einheit
+                type: string
+              - name: Wert
+                type: string
+            missingValues: ["","NA"]
+          dialect:
+            dataset: ugz_luftschadstoffmessung_stundenwerte
+            resource: ugz_ogd_air_h1_2021.csv
+            filters:
+              Standort: "{{params.sensor_id}}"
+            limit: 9
+            sort: Datum desc
+      views:
+        - name: gauge_view
+          title: Luftqualität {{params.sensor_name}}
+          resources:
+            - data
+          specType: tiles-gauge
+          spec:
+            label:
+              field: Parameter
+              transform:
+                NO2: Stickstoffdioxid (NO2)
+                O3: Ozon (O3)
+                PM10: Schwebestaub (PM10)
+            value:
+              field: Wert
+            unit:
+              field: Einheit
+            date:
+              field: Datum

@@ -1,0 +1,61 @@
+tasks:
+  - type: package
+    steps:
+      - code: resource-transform
+        name: data
+        steps:
+          - code: table-normalize
+    source: 
+      name: camera-{{params.sensor_id}}
+      title: Videoüberwachung {{params.sensor_name}}
+      description: 
+      sources: []
+      licenses:
+        - title: Creative Commons CCZero Lizenz
+          name: CC0
+          path: http://www.opendefinition.org/licenses/cc-zero
+      resources:
+        - data:
+            - label: Standort
+              value: Hardau II
+              unit: Wohnsiedlung
+              date: "{{params.date}}"
+            - label: Aufbewahrungsdauer
+              value: "7"
+              unit: Tage
+              date: "{{params.date}}"
+            - label: Was wird überwacht?
+              value: Lifte
+              unit: Innenbereich
+              date: "{{params.date}}"
+            - label: Verantwortliche Dienstabteilung
+              value: LSZ
+              unit: Liegenschaften Stadt Zürich
+              date: "{{params.date}}"
+          name: data
+          format: inline
+          schema:
+            fields:
+              - name: label
+                type: string
+              - name: value
+                type: string
+              - name: unit
+                type: string
+              - name: date
+                type: string
+      views:
+        - name: gauge_view
+          title: Videoüberwachung {{params.sensor_name}}
+          resources:
+            - data
+          specType: tiles-gauge
+          spec:
+            label:
+              field: label
+            value:
+              field: value
+            unit:
+              field: unit
+            date:
+              field: date

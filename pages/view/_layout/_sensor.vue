@@ -88,18 +88,46 @@ export default {
     },
   },
   async mounted() {
-    const fetchedData = await this.$axios.$get(this.fetchUrl)
-    fetchedData.updated = new Intl.DateTimeFormat('de', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      timeZone: 'Europe/Zurich',
-      timeZoneName: 'short',
-      hour12: false,
-    }).format(Date.parse(fetchedData.updated))
-    this.sensorData = fetchedData
+    try {
+      const fetchedData = await this.$axios.$get(this.fetchUrl)
+
+      const mappings = { ...fetchedData.views[0].spec }
+
+      this.sensorData.updated = new Intl.DateTimeFormat('de', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        timeZone: 'Europe/Zurich',
+        timeZoneName: 'short',
+        hour12: false,
+      }).format(
+        Date.parse(fetchedData.resources[0].data[0][mappings.date.field])
+      )
+      this.sensorData.title = fetchedData.views[0].title
+
+      const gauges = fetchedData.resources[0].data
+      this.sensorData.gauges = gauges.map(function (obj) {
+        const nObj = {}
+
+        Object.keys(mappings).forEach((element) => {
+          let value = obj[mappings[element].field]
+          if ('transform' in mappings[element]) {
+            value = mappings[element].transform[value]
+          }
+          nObj[element] = value
+        })
+
+        return nObj
+      })
+
+      // this.sensorData = fetchedData
+    } catch (error) {
+      /* eslint-disable no-console */
+      console.error(error)
+      /* eslint-enable no-console */
+    }
   },
 }
 </script>
@@ -109,7 +137,7 @@ export default {
 .gaugegrid {
   @apply grid grid-cols-2;
   align-items: center;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' preserveAspectRatio='none'%3E%3Crect width='2' height='2' fill='%230F05A0' /%3E%3Crect width='1' height='1' fill='%23537BFE'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23537BFE'/%3E%3C/svg%3E")
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' preserveAspectRatio='none'%3E%3Crect width='2' height='2' fill='%230F05A0' /%3E%3Crect width='1' height='1' fill='%236496FF'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%236496FF'/%3E%3C/svg%3E")
     0 0/100% 100vw;
 }
 

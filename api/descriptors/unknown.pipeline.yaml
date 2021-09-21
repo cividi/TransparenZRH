@@ -1,0 +1,46 @@
+tasks:
+  - type: package
+    steps:
+      - code: resource-transform
+        name: data
+        steps:
+          - code: table-normalize
+    source: 
+      name: unknown
+      title:
+      description: 
+      sources: []
+      licenses: []
+      resources:
+        - data:
+            - label: "..."
+              value: 
+              unit: 
+              date: "{{params.date}}"
+          name: data
+          format: inline
+          schema:
+            fields:
+              - name: label
+                type: string
+              - name: value
+                type: string
+              - name: unit
+                type: string
+              - name: date
+                type: string
+      views:
+        - name: gauge_view
+          title:
+          resources:
+            - data
+          specType: tiles-gauge
+          spec:
+            label:
+              field: label
+            value:
+              field: value
+            unit:
+              field: unit
+            date:
+              field: date
