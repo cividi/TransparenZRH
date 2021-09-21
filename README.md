@@ -45,7 +45,7 @@ $ git clone git@github.com:cividi/TransparenZRH.git
 $ npm install
 
 # serve frontend and backend with hot reload at localhost:3000
-$ export API_URL=http://localhost:3000/api/v1/
+$ export API_URL=http://localhost:3000/api/v2/
 $ vercel dev # frontent only: npm run dev
 
 # build for production and launch server
