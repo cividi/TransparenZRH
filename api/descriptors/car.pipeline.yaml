@@ -16,21 +16,25 @@ tasks:
           path: http://www.opendefinition.org/licenses/cc-zero
       resources:
         - data:
-            - label: Standort
-              value: Hardau II
-              unit: Wohnsiedlung
+            - label: Letzte Stunde
+              value: "400"
+              unit: Fahrzeuge
               date: "{{params.date}}"
-            - label: Aufbewahrungsdauer
-              value: "7"
-              unit: Tage
+            - label: Seit Mitternacht
+              value: "3'620"
+              unit: Fahrzeuge
               date: "{{params.date}}"
-            - label: Was wird überwacht?
-              value: Lifte
-              unit: Innenbereich
+            - label: Summe gestern
+              value: "20'789"
+              unit: Fahrzeuge
               date: "{{params.date}}"
-            - label: Verantwortliche Dienstabteilung
-              value: LSZ
-              unit: Liegenschaften Stadt Zürich
+            - label: Tagesdurchschnitt letzte 7 Tage
+              value: "4'020"
+              unit: Fahrzeuge
+              date: "{{params.date}}"
+            - label: Fahrzeuge pro Stunde
+              value: 
+              unit:
               date: "{{params.date}}"
           name: data
           format: inline
