@@ -17,16 +17,16 @@ tasks:
       resources:
         - data:
             - key: last_hour
-              value: 400
+              value: 1470
               date: "{{params.date}}"
             - key: sum_today
-              value: 3620
+              value: 15250
               date: "{{params.date}}"
             - key: sum_yesterday
-              value: 20789
+              value: 10520
               date: "{{params.date}}"
             - key: mean_seven_days
-              value: 4020
+              value: 13719
               date: "{{params.date}}"
           name: data
           format: inline
