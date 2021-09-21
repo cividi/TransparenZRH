@@ -47,15 +47,17 @@ tasks:
             - data
           specType: tiles-gauge
           spec:
-            label:
-              field: Parameter
-              transform:
-                NO2: Stickstoffdioxid (NO2)
-                O3: Ozon (O3)
-                PM10: Schwebestaub (PM10)
-            value:
-              field: Wert
-            unit:
-              field: Einheit
-            date:
-              field: Datum
+          encoding:
+              type: number
+              label:
+                field: Parameter
+                transform:
+                  NO2: Stickstoffdioxid (NO2)
+                  O3: Ozon (O3)
+                  PM10: Schwebestaub (PM10)
+              value:
+                field: Wert
+              unit:
+                field: Einheit
+              date:
+                field: Datum

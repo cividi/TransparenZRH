@@ -8,7 +8,7 @@ from flask_cors import CORS, cross_origin
 from frictionless import Pipeline
 from jinja2 import Environment, FileSystemLoader
 
-from .lv_counter import *
+from api.lv_counter import *
 
 locale.setlocale(locale.LC_ALL, 'en_US')
 
@@ -28,6 +28,7 @@ def api(layout, sensor):
             "ckan_url": ckan_url,
             "sensor_name": sensor.replace('Zch_',''),
             "sensor_id": sensor,
+            "date_field": "Datum",
         }
     elif layout == 'camera':
         sensor_name = "Wohnsiedlung Hardau II" if sensor == "Hardau" else "- unbekannte Kamera"
@@ -35,13 +36,14 @@ def api(layout, sensor):
             "date": datetime.datetime.now().isoformat(),
             "sensor_name": sensor_name,
             "sensor_id": sensor,
+            "date_field": "date",
         }
     elif layout == 'car':
-        sensor_name = "Quaibrücke Stadthausquai > Bürkliplatz" if sensor == "Z031M001" else ""
         data = {
             "date": datetime.datetime.now().isoformat(),
-            "sensor_name": sensor_name,
+            "sensor_name": sensor,
             "sensor_id": sensor,
+            "date_field": "date",
         }
     elif layout == 'bike' or layout == 'pedestrian':
         response_body, response_code = counter_layout_pipeline(sensor, ckan_url, layout)
@@ -51,6 +53,7 @@ def api(layout, sensor):
             "date": datetime.datetime.now().isoformat(),
             "sensor_name": "unbekannt",
             "sensor_id": sensor,
+            "date_field": "date",
         }
 
     if response_body == {} and response_code == 500:
@@ -63,7 +66,9 @@ def api(layout, sensor):
             pkg = target.task.target
 
             # inline the data for serialization
-            pkg.get_resource("data").data = pkg.get_resource("data").to_inline(dialect=dict(keyed=True))
+            inline_data = pkg.get_resource("data").to_inline(dialect=dict(keyed=True))
+            pkg.get_resource("data").data = inline_data
+            pkg["created"] = inline_data[0][data["date_field"]]
             
             response_body = pkg
             response_code = 200

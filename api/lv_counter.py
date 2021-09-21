@@ -82,27 +82,45 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
                    }
 
     pkg["views"] = [
-    {
-        "name": "gauge_view",
-        "title": pkg.title,
-        "resources": [
-            "data"
-        ],
-        "specType": "tiles-gauge",
-        "spec": {
-            "label": {
-                "field": "label"
-            },
-            "value": {
-                "field": "value"
-            },
-            "unit": {
-                "field": "unit"
-            },
-            "date": {
-                "field": "date"
+        {
+            "name": "gauge_view_1",
+            "resources": ["data"],
+            "specType": "gauge",
+            "spec": {
+                "mark": "number",
+                "filter": { "field": "key", "equals": "sum_yesterday" },
+                "encoding": { "label": "Gestern", "value": { "field": "value", "type": "quantitative" }, "unit": unit }
             }
-        }
+        },
+        {
+            "name": "gauge_view_2",
+            "resources": ["data"],
+            "specType": "gauge",
+            "spec": {
+                "mark": "number",
+                "filter": { "field": "key", "equals": "mean_day_year" },
+                "encoding": { "label": "Tagesdurchschnitt seit Jahresbeginn", "value": { "field": "value", "type": "quantitative" }, "unit": unit }
+            }
+        },
+        {
+            "name": "gauge_view_3",
+            "resources": ["data"],
+            "specType": "gauge",
+            "spec": {
+                "mark": "number",
+                "filter": { "field": "key", "equals": "sum_year" },
+                "encoding": { "label": "Seit Jahresbeginn", "value": { "field": "value", "type": "quantitative" }, "unit": unit }
+            }
+        },
+        {
+            "name": "gauge_view_4",
+            "resources": ["data"],
+            "specType": "gauge",
+            "spec": {
+                "mark": "number",
+                "filter": { "field": "key", "equals": "mean_seven_days" },
+                "encoding": { "label": "Tagesdurchschnitt letzte 7 Tage", "value": { "field": "value", "type": "quantitative" }, "unit": unit }
+            }
         }
     ]
 
@@ -180,36 +198,30 @@ def counter_layout_pipeline(sensor_, url_Open_Data_Katalog, type_):
         name = "data",
         data = [
             {
-                "label": 'Gestern',
-                "value": format_value(counter_yesterday),
-                "unit": unit,
+                "key": 'sum_yesterday',
+                "value": counter_yesterday,
                 "date": date,
             },
             {
-                "label": 'Tagesdurchschnitt seit Jahresbeginn',
-                "value": format_value(mean_per_day),
-                "unit": unit,
+                "key": 'mean_day_year',
+                "value": mean_per_day,
                 "date": date,
             },
             {
-                "label": 'Seit Jahresbeginn',
-                "value": format_value(counter_year),
-                "unit": unit,
+                "key": 'sum_year',
+                "value": counter_year,
                 "date": date,
             },
             {
-                "label": 'Tagesdurchschnitt letzte 7 Tage',
-                "value": format_value(mean_rolling),
-                "unit": unit,
+                "key": 'mean_seven_days',
+                "value": mean_rolling,
                 "date": date,
             }
         ]
     )
 
+    pkg["created"] = date
+
     pkg.add_resource(gauges_data)
 
     return (pkg, 200)
-
-
-def format_value(value):
-    return f"{value:n}".replace(",","'")    # note: swiss locale in python doesn't do grouping or include ' as a seperator, hence using US locale, then replacing manually

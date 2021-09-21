@@ -16,50 +16,95 @@ tasks:
           path: http://www.opendefinition.org/licenses/cc-zero
       resources:
         - data:
-            - label: Letzte Stunde
-              value: "400"
-              unit: Fahrzeuge
+            - key: last_hour
+              value: 400
               date: "{{params.date}}"
-            - label: Seit Mitternacht
-              value: "3'620"
-              unit: Fahrzeuge
+            - key: sum_today
+              value: 3620
               date: "{{params.date}}"
-            - label: Summe gestern
-              value: "20'789"
-              unit: Fahrzeuge
+            - key: sum_yesterday
+              value: 20789
               date: "{{params.date}}"
-            - label: Tagesdurchschnitt letzte 7 Tage
-              value: "4'020"
-              unit: Fahrzeuge
-              date: "{{params.date}}"
-            - label: Fahrzeuge pro Stunde
-              value: 
-              unit:
+            - key: mean_seven_days
+              value: 4020
               date: "{{params.date}}"
           name: data
           format: inline
           schema:
             fields:
-              - name: label
+              - name: key
                 type: string
               - name: value
-                type: string
-              - name: unit
-                type: string
+                type: integer
               - name: date
                 type: string
       views:
-        - name: gauge_view
-          title: MIV-Zählstelle {{params.sensor_name}}
+        - name: gauge_view_1
           resources:
             - data
-          specType: tiles-gauge
+          specType: gauge
           spec:
-            label:
-              field: label
-            value:
-              field: value
-            unit:
-              field: unit
-            date:
-              field: date
+            mark: number
+            filter:
+              field: key
+              equals: last_hour
+            encoding:
+              label: Letzte Stunde
+              value:
+                field: value
+                type: quantitative
+              unit: Fahrzeuge
+        - name: gauge_view_2
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: sum_today
+            encoding:
+              label: Seit Mitternacht
+              value:
+                field: value
+                type: quantitative
+              unit: Fahrzeuge
+        - name: gauge_view_3
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: sum_yesterday
+            encoding:
+              label: Summe gestern
+              value:
+                field: value
+                type: quantitative
+              unit: Fahrzeuge
+        - name: gauge_view_4
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: mean_seven_days
+            encoding:
+              label: Tagesdurchschnitt letzte 7 Tage
+              value:
+                field: value
+                type: quantitative
+              unit: Fahrzeuge
+        - name: gauge_view_5
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: svg
+            encoding:
+              label: Fahrzeuge je Stunde
+              src: https://transparenzrh.eu-central-1.linodeobjects.com/car/{{params.sensor_id}}.svg

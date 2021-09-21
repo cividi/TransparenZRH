@@ -5,13 +5,20 @@
         <p class="px-4 py-2">Datenstand: {{ sensorData.updated }}</p>
       </div>
       <div class="gaugegrid">
-        <Gauge
-          v-for="gauge in sensorData.gauges"
-          :key="gauge.label"
-          :label="gauge.label"
-          :value="gauge.value"
-          :unit="gauge.unit"
-        />
+        <div v-for="gauge in sensorData.gauges" :key="gauge.label">
+          <LoadingGauge v-if="gauge.type == 'loading'" />
+          <NumberGauge
+            v-if="gauge.type == 'number'"
+            :label="gauge.label"
+            :value="gauge.value"
+            :unit="gauge.unit"
+          />
+          <SvgGauge
+            v-if="gauge.type == 'svg'"
+            :label="gauge.label"
+            :svg="gauge.src"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -24,10 +31,10 @@ export default {
       sensorData: {
         title: 'Lädt...',
         gauges: [
-          { label: '', unit: '', value: '...' },
-          { label: '', unit: '', value: '...' },
-          { label: '', unit: '', value: '...' },
-          { label: '', unit: '', value: '...' },
+          { label: '', unit: '', value: '', type: 'loading' },
+          { label: '', unit: '', value: '', type: 'loading' },
+          { label: '', unit: '', value: '', type: 'loading' },
+          { label: '', unit: '', value: '', type: 'loading' },
         ],
         description: ' ',
         updated: ' ',
@@ -91,8 +98,6 @@ export default {
     try {
       const fetchedData = await this.$axios.$get(this.fetchUrl)
 
-      const mappings = { ...fetchedData.views[0].spec }
-
       this.sensorData.updated = new Intl.DateTimeFormat('de', {
         year: 'numeric',
         month: 'long',
@@ -102,27 +107,66 @@ export default {
         timeZone: 'Europe/Zurich',
         timeZoneName: 'short',
         hour12: false,
-      }).format(
-        Date.parse(fetchedData.resources[0].data[0][mappings.date.field])
-      )
+      }).format(Date.parse(fetchedData.created))
       this.sensorData.title = fetchedData.views[0].title
 
-      const gauges = fetchedData.resources[0].data
+      const gauges = fetchedData.views
       this.sensorData.gauges = gauges.map(function (obj) {
-        const nObj = {}
+        const resourceIndex = obj.resources.map(function (viewResourceName) {
+          return [...Array(fetchedData.resources.length).keys()].filter(
+            function (el) {
+              return fetchedData.resources[el].name === viewResourceName
+            }
+          )
+        })[0]
 
-        Object.keys(mappings).forEach((element) => {
-          let value = obj[mappings[element].field]
-          if ('transform' in mappings[element]) {
-            value = mappings[element].transform[value]
-          }
-          nObj[element] = value
-        })
+        let data = null
 
-        return nObj
+        if ('filter' in obj.spec) {
+          const filter = obj.spec.filter
+          data = fetchedData.resources[resourceIndex].data.filter(function (
+            el
+          ) {
+            if ('equals' in filter) {
+              return el[filter.field] === filter.equals
+            } else {
+              /* eslint-disable no-console */
+              console.error(
+                'Filters other than equals are not supported at the moment.'
+              )
+              /* eslint-enable no-console */
+              return false
+            }
+          })[0]
+        } else {
+          data = fetchedData.resources[resourceIndex].data[0]
+        }
+
+        const encoding = obj.spec.encoding
+
+        if (obj.specType === 'gauge') {
+          const nObj = {}
+          nObj.type = obj.spec.mark
+          Object.keys(encoding).forEach(function (enc) {
+            if (typeof encoding[enc] === 'string') {
+              nObj[enc] = encoding[enc]
+            } else if (typeof encoding[enc] === 'object') {
+              if ('field' in encoding[enc]) {
+                nObj[enc] = data[encoding[enc].field]
+              }
+              if (
+                'type' in encoding[enc] &&
+                encoding[enc].type === 'quantitative'
+              ) {
+                nObj[enc] = nObj[enc].toLocaleString('de-CH')
+              }
+            }
+          })
+          return nObj
+        } else {
+          return false
+        }
       })
-
-      // this.sensorData = fetchedData
     } catch (error) {
       /* eslint-disable no-console */
       console.error(error)

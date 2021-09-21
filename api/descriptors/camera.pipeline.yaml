@@ -16,46 +16,82 @@ tasks:
           path: http://www.opendefinition.org/licenses/cc-zero
       resources:
         - data:
-            - label: Standort
+            - key: location
               value: Hardau II
-              unit: Wohnsiedlung
               date: "{{params.date}}"
-            - label: Aufbewahrungsdauer
+            - key: duration
               value: "7"
-              unit: Tage
               date: "{{params.date}}"
-            - label: Was wird überwacht?
+            - key: view
               value: Lifte
-              unit: Innenbereich
               date: "{{params.date}}"
-            - label: Verantwortliche Dienstabteilung
+            - key: responsible
               value: LSZ
-              unit: Liegenschaften Stadt Zürich
               date: "{{params.date}}"
           name: data
           format: inline
           schema:
             fields:
-              - name: label
+              - name: key
                 type: string
               - name: value
-                type: string
-              - name: unit
                 type: string
               - name: date
                 type: string
       views:
-        - name: gauge_view
-          title: Videoüberwachung {{params.sensor_name}}
+        - name: gauge_view_1
           resources:
             - data
-          specType: tiles-gauge
+          specType: gauge
           spec:
-            label:
-              field: label
-            value:
-              field: value
-            unit:
-              field: unit
-            date:
-              field: date
+            mark: number
+            filter:
+              field: key
+              equals: location
+            encoding:
+              label: Standort
+              value:
+                field: value
+              unit: Wohnsiedlung
+        - name: gauge_view_2
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: duration
+            encoding:
+              label: Aufbewahrungsdauer
+              value:
+                field: value
+              unit: Tage
+        - name: gauge_view_3
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: view
+            encoding:
+              label: Was wird überwacht?
+              value:
+                field: value
+              unit: Innenbereich
+        - name: gauge_view_4
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: responsible
+            encoding:
+              label: Verantwortliche Dienstabteilung
+              value:
+                field: value
+              unit: Liegenschaften Stadt Zürich

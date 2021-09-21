@@ -41,7 +41,7 @@ tasks:
               - name: Einheit
                 type: string
               - name: Wert
-                type: string
+                type: number
             missingValues: ["","NA"]
           dialect:
             dataset: ugz_luftschadstoffmessung_stundenwerte
@@ -51,21 +51,51 @@ tasks:
             limit: 9
             sort: Datum desc
       views:
-        - name: gauge_view
-          title: Luftqualität {{params.sensor_name}}
+        - name: gauge_view_1
           resources:
             - data
-          specType: tiles-gauge
+          specType: gauge
           spec:
-            label:
+            mark: number
+            filter:
               field: Parameter
-              transform:
-                NO2: Stickstoffdioxid (NO2)
-                O3: Ozon (O3)
-                PM10: Schwebestaub (PM10)
-            value:
-              field: Wert
-            unit:
-              field: Einheit
-            date:
-              field: Datum
+              equals: NO2
+            encoding:
+              label: Stickstoffdioxid (NO2)
+              value:
+                field: Wert
+                type: quantitative
+              unit:
+                field: Einheit
+        - name: gauge_view_2
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: Parameter
+              equals: O3
+            encoding:
+              label: Ozon (O3)
+              value:
+                field: Wert
+                type: quantitative
+              unit:
+                field: Einheit
+        - name: gauge_view_3
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: Parameter
+              equals: PM10
+            encoding:
+              label: Schwebestaub (PM10)
+              value:
+                field: Wert
+                type: quantitative
+              unit:
+                field: Einheit
