@@ -16,18 +16,6 @@ tasks:
           path: http://www.opendefinition.org/licenses/cc-zero
       resources:
         - path: https://verkehrsdatenanalyse.ch/stzhpilot/{{params.sensor_id}}_kacheln.csv
-            - key: last_hour
-              value: 1470
-              date: "{{params.date}}"
-            - key: sum_today
-              value: 15250
-              date: "{{params.date}}"
-            - key: sum_yesterday
-              value: 10520
-              date: "{{params.date}}"
-            - key: mean_seven_days
-              value: 13719
-              date: "{{params.date}}"
           name: data
           format: csv
           schema:
