@@ -7,7 +7,7 @@ tasks:
           - code: table-normalize
     source: 
       name: car-{{params.sensor_id}}
-      title: MIV-Zählstelle {{params.sensor_name}}
+      title: MIV-Zählstelle {{params.sensor_id}}
       description: 
       sources: []
       licenses:

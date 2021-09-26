@@ -40,10 +40,8 @@ def api(layout, sensor):
         }
     elif layout == 'car':
         data = {
-            "date": datetime.datetime.now().isoformat(),
-            "sensor_name": sensor,
             "sensor_id": sensor,
-            "date_field": "date",
+            "date_field": "DATZEIT",
         }
     elif layout == 'bike' or layout == 'pedestrian':
         response_body, response_code = counter_layout_pipeline(sensor, ckan_url, layout)
