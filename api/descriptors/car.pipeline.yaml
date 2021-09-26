@@ -15,7 +15,7 @@ tasks:
           name: CC0
           path: http://www.opendefinition.org/licenses/cc-zero
       resources:
-        - data:
+        - path: https://verkehrsdatenanalyse.ch/stzhpilot/{{params.sensor_id}}_kacheln.csv
             - key: last_hour
               value: 1470
               date: "{{params.date}}"
@@ -29,15 +29,23 @@ tasks:
               value: 13719
               date: "{{params.date}}"
           name: data
-          format: inline
+          format: csv
           schema:
             fields:
-              - name: key
+              - name: ZSTID
                 type: string
-              - name: value
+              - name: MSTID
                 type: integer
-              - name: date
+              - name: DATZEIT
                 type: string
+              - name: SUMMEHEUTE
+                type: integer
+              - name: SUMMEGESTERN
+                type: integer
+              - name: DTV_LETZTEWOCHE
+                type: integer
+              - name: LETZTER_MESSWERT
+                type: integer
       views:
         - name: gauge_view_1
           resources:
@@ -45,13 +53,10 @@ tasks:
           specType: gauge
           spec:
             mark: number
-            filter:
-              field: key
-              equals: last_hour
             encoding:
               label: Letzte Stunde
               value:
-                field: value
+                field: LETZTER_MESSWERT
                 type: quantitative
               unit: Fahrzeuge
         - name: gauge_view_2
@@ -60,13 +65,10 @@ tasks:
           specType: gauge
           spec:
             mark: number
-            filter:
-              field: key
-              equals: sum_today
             encoding:
               label: Seit Mitternacht
               value:
-                field: value
+                field: SUMMEHEUTE
                 type: quantitative
               unit: Fahrzeuge
         - name: gauge_view_3
@@ -75,13 +77,10 @@ tasks:
           specType: gauge
           spec:
             mark: number
-            filter:
-              field: key
-              equals: sum_yesterday
             encoding:
               label: Summe gestern
               value:
-                field: value
+                field: SUMMEGESTERN
                 type: quantitative
               unit: Fahrzeuge
         - name: gauge_view_4
@@ -90,13 +89,10 @@ tasks:
           specType: gauge
           spec:
             mark: number
-            filter:
-              field: key
-              equals: mean_seven_days
             encoding:
               label: Tagesdurchschnitt letzte 7 Tage
               value:
-                field: value
+                field: DTV_LETZTEWOCHE
                 type: quantitative
               unit: Fahrzeuge
         - name: gauge_view_5
@@ -107,4 +103,4 @@ tasks:
             mark: svg
             encoding:
               label: Fahrzeuge je Stunde
-              src: https://transparenzrh.eu-central-1.linodeobjects.com/car/{{params.sensor_id}}.svg
+              src: https://verkehrsdatenanalyse.ch/stzhpilot/{{params.sensor_id}}.svg
