@@ -22,10 +22,5 @@
         "Cache-Control": "s-maxage=900"
       }
     }
-  ],
-  "functions": {
-    "api/v2.py": {
-      "includeFiles": "api/lv_counter.py"
-    }
-  }
+  ]
 }
