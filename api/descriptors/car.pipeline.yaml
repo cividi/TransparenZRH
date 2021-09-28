@@ -23,7 +23,7 @@ tasks:
               - name: ZSTID
                 type: string
               - name: MSTID
-                type: integer
+                type: string
               - name: DATZEIT
                 type: string
               - name: SUMMEHEUTE

@@ -20,9 +20,9 @@ export default {
 
 <style scoped lang="postcss">
 .gauge {
-  @apply text-white bg-zueriblue-light;
+  @apply text-white bg-zueriblue;
   height: 50vw;
-  width: 100vw;
+  width: 98vw;
   display: grid;
   align-items: center;
   text-align: center;
@@ -30,7 +30,8 @@ export default {
 .gauge__readout {
 }
 img.gauge__svg__img {
-  height: 70%;
+  margin: auto;
+  width: 90%;
 }
 .gauge__label {
   @apply pb-2;
