@@ -3,6 +3,7 @@ import locale
 import json
 import yaml
 import decimal
+import requests
 from flask import Flask, Response
 from flask_cors import CORS, cross_origin
 
@@ -49,8 +50,12 @@ def api(layout, sensor):
             "date_field": "DATZEIT",
         }
     elif layout == 'bike' or layout == 'pedestrian':
+        r = requests.head("https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/download/2021_verkehrszaehlungen_werte_fussgaenger_velo.csv")
+        source_time = datetime.datetime.strptime(r.headers['last-modified'],
+            #Fri, 27 Mar 2015 08:05:42 GMT
+            '%a, %d %b %Y %X %Z')
         data = {
-            "date": datetime.datetime.now().isoformat(),
+            "date": source_time.isoformat(),
             "sensor_ref": sensor,
             "date_field": "date",
         }
