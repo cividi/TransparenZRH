@@ -1,0 +1,41 @@
+tasks:
+  - type: resource
+    source:
+      name: data
+      path: https://data.stadt-zuerich.ch
+      format: ckan
+      dialect:
+        dataset: ted_taz_verkehrszaehlungen_werte_fussgaenger_velo
+        resource: "{{params.thisyear}}_verkehrszaehlungen_werte_fussgaenger_velo.csv"
+        limit: 32000
+        sort: DATUM desc
+        filters:
+          FK_ZAEHLER: "{{params.sensor_id}}"
+    steps:
+      - code: field-add
+        name: count
+        formula: int({{params.sensor_type}}_IN) + int({{params.sensor_type}}_OUT)
+      - code: date-transform
+        sourceName: DATUM
+        sourceFormat: "%Y-%m-%dT%H:%M"
+        targetName: yearday
+        targetFormat: "%j"
+        targetType: integer
+      - code: table-normalize
+      - code: table-aggregate
+        groupName: "yearday"
+        aggregation:
+          day_sum: !!python/tuple ["count", !!python/name:sum ]
+      - code: table-normalize
+      - code: row-sort
+        fieldNames: ["yearday"]
+        reverse: true
+      - code: field-add
+        name: year
+        type: integer
+        value: {{params.thisyear}}
+      - code: table-normalize
+      - code: table-write
+        path: s3://transparenzrh/bikepedestrian/{{params.sensor_ref}}.csv
+        control:
+          acl: public-read
