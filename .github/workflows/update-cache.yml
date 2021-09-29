@@ -1,6 +1,8 @@
 name: Update S3 Cache
 
 on:
+  schedule:
+    - cron: "05 * * * *"
   push:
     branches:
       - "feature/miv-kennwert"

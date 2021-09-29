@@ -4,6 +4,26 @@ tasks:
       name: data
       path: https://data.stadt-zuerich.ch
       format: ckan
+      schema:
+        fields:
+          - name: FK_ZAEHLER
+            type: string
+          - name: FK_STANDORT
+            type: string
+          - name: DATUM
+            type: string
+          - name: VELO_IN
+            type: integer
+          - name: VELO_OUT
+            type: integer
+          - name: FUSS_IN
+            type: integer
+          - name: FUSS_OUT
+            type: integer
+          - name: OST
+            type: string
+          - name: NORD
+            type: string
       dialect:
         dataset: ted_taz_verkehrszaehlungen_werte_fussgaenger_velo
         resource: "{{params.thisyear}}_verkehrszaehlungen_werte_fussgaenger_velo.csv"
@@ -12,9 +32,16 @@ tasks:
         filters:
           FK_ZAEHLER: "{{params.sensor_id}}"
     steps:
+      - code: cell-fill
+        fieldName: "{{params.sensor_type}}_IN"
+        value: "0"
+      - code: cell-fill
+        fieldName: "{{params.sensor_type}}_OUT"
+        value: "0"
+      - code: table-normalize
       - code: field-add
         name: count
-        formula: int({{params.sensor_type}}_IN) + int({{params.sensor_type}}_OUT)
+        formula: "int({{params.sensor_type}}_IN) + int({{params.sensor_type}}_OUT)"
       - code: date-transform
         sourceName: DATUM
         sourceFormat: "%Y-%m-%dT%H:%M"
@@ -35,7 +62,3 @@ tasks:
         type: integer
         value: {{params.thisyear}}
       - code: table-normalize
-      - code: table-write
-        path: s3://transparenzrh/bikepedestrian/{{params.sensor_ref}}.csv
-        control:
-          acl: public-read
