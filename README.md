@@ -35,28 +35,47 @@ For testing and deployment add the following environment variables:
 
 - `API_URL`
 
-### Run and Deploy
+### Main app run and deploy
 
 ```bash
 # clone repository
-$ git clone git@github.com:cividi/TransparenZRH.git
+git clone git@github.com:cividi/TransparenZRH.git
 
 # install dependencies
-$ npm install
+npm install
 
 # serve frontend and backend with hot reload at localhost:3000
-$ export API_URL=http://localhost:3000/api/v2/
-$ vercel dev # frontent only: npm run dev
+export API_URL=http://localhost:3000/api/v2/
+vercel dev # frontent only: npm run dev
 
 # build for production and launch server
-$ npm run build
-$ npm run start
+npm run build
+npm run start
 
 # generate static project
-$ npm run generate
+npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+### Aggregated values cache
+
+Some values are pre aggregated and cached in a S3 bucket as publicly readable files. To populate the cache (for production and testing handled via a [GitHub Action](.github/workflows/update-cache.yml) run 5 min past every hour):
+
+```sh
+# Virtual environment and dependencies
+python3 -m venv venv
+. venv/bin/activate
+pip install src/requirements.txt
+
+# Set S3 environment variables
+export AWS_ACCESS_KEY_ID=<YOUR_S3_ACCESS_ID>
+export AWS_SECRET_ACCESS_LEY=<YOUR_S3_SECRET_ACCESS_LEY>
+export S3_ENDPOINT_URL=<YOUR_S3_ENDPOINT>
+
+# Run cache updater
+python src/aggregators.py
+```
 
 # LICENSE
 

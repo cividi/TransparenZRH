@@ -92,3 +92,4 @@ sw.*
 .vercel
 venv
 __pycache__
+tmp
