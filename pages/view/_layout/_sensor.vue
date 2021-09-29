@@ -158,7 +158,11 @@ export default {
                 'type' in encoding[enc] &&
                 encoding[enc].type === 'quantitative'
               ) {
-                nObj[enc] = nObj[enc].toLocaleString('de-CH')
+                nObj[enc] = nObj[enc].toLocaleString('de-CH', {
+                  maximumFractionDigits: 0,
+                  style: 'decimal',
+                  useGrouping: true,
+                })
               }
             }
           })

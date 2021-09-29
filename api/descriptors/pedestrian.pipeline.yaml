@@ -53,13 +53,13 @@ tasks:
           - code: table-normalize
     source: 
       name: bike-{{params.sensor_ref}}
-      title: Velozählstelle {{params.sensor_ref}}
-      description: Das Tiefbauamt der Stadt Zürich erhebt seit 2009 die Velofrequenzen in der Stadt Zürich mit Hilfe automatischer Zählgeräte. Das Zählstellennetz umfasst derzeit 24 Zählgeräte. Die Messung erfolgt über im Boden eingelassene Induktionsschlaufen. Über Funk werden die Daten an einen Server übermittelt. Die Geräte sind vor dem Hintergrund des Datenschutzes unbedenklich, da lediglich Velofahrten gezählt und keine Daten über Nutzer oder Velos detektiert werden können. Die Daten der Zählgeräte werden via OpenData-Portal im Internet frei zugänglich gemacht.
+      title: Fussgängerzählstelle {{params.sensor_ref}}
+      description: Seit 2013 werden die Frequenzen des Fussverkehrs automatisch erfasst. Derzeit sind 18 Zählgeräte in Betrieb. Die Frequenzen des Fussverkehrs werden von den Zählgeräten mittels passiver Infrarotstrahlung erhoben. Die damit erhobenen Daten bilden eine wichtige quantitative Grundlage zur Beurteilung der Entwicklung des Fussverkehrs auf dem Stadtgebiet. Die Daten der Zählgeräte werden via OpenData-Portal im Internet zugänglich gemacht.
       sources:
         - path: "{{params.ckan_url}}/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/resource/ebe5e78c-a99f-4607-bedc-051f33d75318"
           title: Rohdaten auf data.stadt-zuerich.ch
-        - path: https://www.stadt-zuerich.ch/ted/de/index/taz/verkehr/webartikel/webartikel_velozaehlungen.html
-          title: Weitere Informationen und Daten zu Velozählungen in der Stadt Zürich
+        - path: https://www.stadt-zuerich.ch/ted/de/index/taz/verkehr/webartikel/webartikel_fussverkehrszaehlung.html
+          title: Weitere Informationen und Daten zu Fussgängerzählungen in der Stadt Zürich
       licenses:
         - title: Creative Commons CCZero Lizenz
           name: CC0
@@ -93,7 +93,7 @@ tasks:
               value:
                 field: day_sum
                 type: quantitative
-              unit: Velos
+              unit: Personen
         - name: gauge_view_2
           resources:
             - dailymeanyear
@@ -105,7 +105,7 @@ tasks:
               value:
                 field: year_mean
                 type: quantitative
-              unit: Velos
+              unit: Personen
         - name: gauge_view_3
           resources:
             - sumyear
@@ -117,7 +117,7 @@ tasks:
               value:
                 field: year_sum
                 type: quantitative
-              unit: Velos
+              unit: Personen
         - name: gauge_view_4
           resources:
             - rollingmean
@@ -129,4 +129,4 @@ tasks:
               value:
                 field: rolling_mean
                 type: quantitative
-              unit: Velos
+              unit: Personen
