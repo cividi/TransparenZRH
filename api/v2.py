@@ -4,6 +4,7 @@ import json
 import yaml
 import decimal
 import requests
+import statistics
 from flask import Flask, Response
 from flask_cors import CORS, cross_origin
 
