@@ -35,6 +35,6 @@ export default {
   @apply font-light text-xs;
 }
 .gauge__label {
-  @apply pb-2;
+  @apply pb-1 pl-4 pr-4;
 }
 </style>
