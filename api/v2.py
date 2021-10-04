@@ -1,4 +1,5 @@
 import datetime
+from dateutil import parser
 import locale
 import json
 import yaml
@@ -11,7 +12,7 @@ from flask_cors import CORS, cross_origin
 from frictionless import Pipeline
 from jinja2 import Environment, FileSystemLoader
 
-locale.setlocale(locale.LC_ALL, 'en_US')
+locale.setlocale(locale.LC_ALL, 'de_DE')
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -51,10 +52,11 @@ def api(layout, sensor):
             "date_field": "DATZEIT",
         }
     elif layout == 'bike' or layout == 'pedestrian':
-        r = requests.head("https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/download/2021_verkehrszaehlungen_werte_fussgaenger_velo.csv")
-        source_time = datetime.datetime.strptime(r.headers['last-modified'],
-            #Fri, 27 Mar 2015 08:05:42 GMT
-            '%a, %d %b %Y %X %Z')
+        try:
+            r = requests.head("https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/download/2021_verkehrszaehlungen_werte_fussgaenger_velo.csv")
+            source_time = parser.parse(r.headers['last-modified'])
+        except Exception as e:
+            raise Exception(f"{e}, couldn't parse datetime string.")
         data = {
             "date": source_time.isoformat(),
             "sensor_ref": sensor,
