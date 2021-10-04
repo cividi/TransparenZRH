@@ -1,0 +1,97 @@
+tasks:
+  - type: package
+    steps:
+      - code: resource-transform
+        name: data
+        steps:
+          - code: table-normalize
+    source: 
+      name: camera-{{params.sensor_id}}
+      title: Videoüberwachung {{params.sensor_name}}
+      description: 
+      sources: []
+      licenses:
+        - title: Creative Commons CCZero Lizenz
+          name: CC0
+          path: http://www.opendefinition.org/licenses/cc-zero
+      resources:
+        - data:
+            - key: location
+              value: Hardau II
+              date: "{{params.date}}"
+            - key: duration
+              value: "7"
+              date: "{{params.date}}"
+            - key: view
+              value: Lifte
+              date: "{{params.date}}"
+            - key: responsible
+              value: LSZ
+              date: "{{params.date}}"
+          name: data
+          format: inline
+          schema:
+            fields:
+              - name: key
+                type: string
+              - name: value
+                type: string
+              - name: date
+                type: string
+      views:
+        - name: gauge_view_1
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: location
+            encoding:
+              label: Standort
+              value:
+                field: value
+              unit: Wohnsiedlung
+        - name: gauge_view_2
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: duration
+            encoding:
+              label: Aufbewahrungsdauer
+              value:
+                field: value
+              unit: Tage
+        - name: gauge_view_3
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: view
+            encoding:
+              label: Was wird überwacht?
+              value:
+                field: value
+              unit: Innenbereich
+        - name: gauge_view_4
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            filter:
+              field: key
+              equals: responsible
+            encoding:
+              label: Verantwortliche Dienstabteilung
+              value:
+                field: value
+              unit: Liegenschaften Stadt Zürich

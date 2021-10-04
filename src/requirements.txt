@@ -1,0 +1,6 @@
+git+https://github.com/cividi/frictionless-geo.git@ckan_custom_credential_env_vars
+ijson>=3.0
+jsonlines>=1.2
+boto3>=1.9
+jinja2
+frictionless_geojson

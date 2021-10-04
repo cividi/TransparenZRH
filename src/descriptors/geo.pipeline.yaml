@@ -1,0 +1,37 @@
+tasks:
+  - type: resource
+    source:
+      path: https://www.ogd.stadt-zuerich.ch/wfs/geoportal/Standorte_der_automatischen_Fuss__und_Velozaehlungen?service=WFS&version=1.1.0&request=GetFeature&outputFormat=GeoJSON&typename=view_eco_standorte
+      format: geojson
+      name: standorte-automatische-fuss-und-velozaehlungen
+      layout:
+        pickFields:
+          - abkuerzung
+          - bezeichnung
+          - fk_zaehler
+          - bis
+    steps:
+      - code: table-normalize
+      - code: row-filter
+        formula: bis is None
+      - code: field-remove
+        names:
+          - bis
+      - code: field-update
+        name: bezeichnung
+        newName: sensor_name
+      - code: field-update
+        name: abkuerzung
+        newName: sensor_ref
+      - code: field-update
+        name: fk_zaehler
+        newName: sensor_id
+      - code: field-add
+        name: thisyear
+        type: integer
+        value: {{params.thisyear}}
+      - code: table-normalize
+      - code: categorise-sensor
+        sourceName: sensor_ref
+        targetName: sensor_type
+      

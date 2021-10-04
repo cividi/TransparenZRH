@@ -1,0 +1,94 @@
+tasks:
+  - type: package
+    steps:
+      - code: resource-transform
+        name: data
+        steps:
+          - code: table-normalize
+    source: 
+      name: car-{{params.sensor_id}}
+      title: MIV-Zählstelle {{params.sensor_id}}
+      description: 
+      sources: []
+      licenses:
+        - title: Creative Commons CCZero Lizenz
+          name: CC0
+          path: http://www.opendefinition.org/licenses/cc-zero
+      resources:
+        - path: https://verkehrsdatenanalyse.ch/stzhpilot/{{params.sensor_id}}_kacheln.csv
+          name: data
+          format: csv
+          schema:
+            fields:
+              - name: ZSTID
+                type: string
+              - name: MSTID
+                type: string
+              - name: DATZEIT
+                type: string
+              - name: SUMMEHEUTE
+                type: integer
+              - name: SUMMEGESTERN
+                type: integer
+              - name: DTV_LETZTEWOCHE
+                type: integer
+              - name: LETZTER_MESSWERT
+                type: integer
+      views:
+        - name: gauge_view_1
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            encoding:
+              label: Letzte Stunde
+              value:
+                field: LETZTER_MESSWERT
+                type: quantitative
+              unit: Fahrzeuge
+        - name: gauge_view_2
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            encoding:
+              label: Seit Mitternacht
+              value:
+                field: SUMMEHEUTE
+                type: quantitative
+              unit: Fahrzeuge
+        - name: gauge_view_3
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            encoding:
+              label: Summe gestern
+              value:
+                field: SUMMEGESTERN
+                type: quantitative
+              unit: Fahrzeuge
+        - name: gauge_view_4
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: number
+            encoding:
+              label: Tagesdurchschnitt letzte 7 Tage
+              value:
+                field: DTV_LETZTEWOCHE
+                type: quantitative
+              unit: Fahrzeuge
+        - name: gauge_view_5
+          resources:
+            - data
+          specType: gauge
+          spec:
+            mark: svg
+            encoding:
+              label: Fahrzeuge je Stunde
+              src: https://verkehrsdatenanalyse.ch/stzhpilot/{{params.sensor_id}}.svg

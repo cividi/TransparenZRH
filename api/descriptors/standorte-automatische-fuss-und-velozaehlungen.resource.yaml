@@ -1,0 +1,9 @@
+path: https://www.ogd.stadt-zuerich.ch/wfs/geoportal/Standorte_der_automatischen_Fuss__und_Velozaehlungen?service=WFS&version=1.1.0&request=GetFeature&outputFormat=GeoJSON&typename=view_eco_standorte
+format: geojson
+name: standorte-automatische-fuss-und-velozaehlungen
+layout:
+  pickFields:
+    - abkuerzung
+    - bezeichnung
+    - fk_zaehler
+    - bis

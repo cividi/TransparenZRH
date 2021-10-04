@@ -1,8 +1,19 @@
 {
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "api/index.py",
+      "src": "/api/v1/(.*)",
+      "dest": "api/v1.py",
+      "methods": ["GET"],
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Methods": "GET",
+        "Cache-Control": "s-maxage=900"
+      }
+    },
+    {
+      "src": "/api/v2/(.*)",
+      "dest": "api/v2.py",
       "methods": ["GET"],
       "headers": {
         "Access-Control-Allow-Origin": "*",

@@ -1,0 +1,132 @@
+tasks:
+  - type: package
+    steps:
+      - code: resource-transform
+        name: yesterday
+        steps:
+          - code: table-normalize
+          - code: row-slice
+            tail: 1
+          - code: field-add
+            name: date
+            type: string
+            value: "{{params.date}}"
+          - code: table-normalize
+      - code: resource-transform
+        name: dailymeanyear
+        steps:
+          - code: table-normalize
+          - code: table-aggregate
+            groupName: year
+            aggregation:
+              year_mean: !!python/tuple ["day_sum", !!python/name:statistics.mean ]
+          - code: field-update
+            name: year_mean
+            type: number
+          - code: table-normalize
+      - code: resource-transform
+        name: sumyear
+        steps:
+          - code: table-normalize
+          - code: table-aggregate
+            groupName: year
+            aggregation:
+              year_sum: !!python/tuple ["day_sum", !!python/name:sum ]
+          - code: field-update
+            name: year_sum
+            type: number
+          - code: table-normalize
+      - code: resource-transform
+        name: rollingmean
+        steps:
+          - code: table-normalize
+          - code: row-slice
+            tail: 7
+          - code: table-normalize
+          - code: table-aggregate
+            groupName: year
+            aggregation:
+              rolling_mean: !!python/tuple ["day_sum", !!python/name:statistics.mean ]
+          - code: field-update
+            name: rolling_mean
+            type: number
+          - code: table-normalize
+    source: 
+      name: bike-{{params.sensor_ref}}
+      title: Fussgängerzählstelle {{params.sensor_ref}}
+      description: Seit 2013 werden die Frequenzen des Fussverkehrs automatisch erfasst. Derzeit sind 18 Zählgeräte in Betrieb. Die Frequenzen des Fussverkehrs werden von den Zählgeräten mittels passiver Infrarotstrahlung erhoben. Die damit erhobenen Daten bilden eine wichtige quantitative Grundlage zur Beurteilung der Entwicklung des Fussverkehrs auf dem Stadtgebiet. Die Daten der Zählgeräte werden via OpenData-Portal im Internet zugänglich gemacht.
+      sources:
+        - path: "{{params.ckan_url}}/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/resource/ebe5e78c-a99f-4607-bedc-051f33d75318"
+          title: Rohdaten auf data.stadt-zuerich.ch
+        - path: https://www.stadt-zuerich.ch/ted/de/index/taz/verkehr/webartikel/webartikel_fussverkehrszaehlung.html
+          title: Weitere Informationen und Daten zu Fussgängerzählungen in der Stadt Zürich
+      licenses:
+        - title: Creative Commons CCZero Lizenz
+          name: CC0
+          path: http://www.opendefinition.org/licenses/cc-zero
+      resources:
+        - path: https://transparenzrh.eu-central-1.linodeobjects.com/bikepedestrian/{{params.sensor_ref}}.csv
+          name: yesterday
+        - path: https://transparenzrh.eu-central-1.linodeobjects.com/bikepedestrian/{{params.sensor_ref}}.csv
+          name: dailymeanyear
+          schema:
+            fields:
+              - name: yearday
+                type: integer
+              - name: day_sum
+                type: integer
+              - name: year
+                type: integer
+        - path: https://transparenzrh.eu-central-1.linodeobjects.com/bikepedestrian/{{params.sensor_ref}}.csv
+          name: sumyear
+        - path: https://transparenzrh.eu-central-1.linodeobjects.com/bikepedestrian/{{params.sensor_ref}}.csv
+          name: rollingmean
+      views:
+        - name: gauge_view_1
+          resources:
+            - yesterday
+          specType: gauge
+          spec:
+            mark: number
+            encoding:
+              label: Gestern
+              value:
+                field: day_sum
+                type: quantitative
+              unit: Personen
+        - name: gauge_view_2
+          resources:
+            - dailymeanyear
+          specType: gauge
+          spec:
+            mark: number
+            encoding:
+              label: Tagesdurchschnitt seit Jahresbeginn
+              value:
+                field: year_mean
+                type: quantitative
+              unit: Personen
+        - name: gauge_view_3
+          resources:
+            - sumyear
+          specType: gauge
+          spec:
+            mark: number
+            encoding:
+              label: Gemessen seit Jahresbeginn
+              value:
+                field: year_sum
+                type: quantitative
+              unit: Personen
+        - name: gauge_view_4
+          resources:
+            - rollingmean
+          specType: gauge
+          spec:
+            mark: number
+            encoding:
+              label: Tagesdurchschnitt letzte 7 Tage
+              value:
+                field: rolling_mean
+                type: quantitative
+              unit: Personen

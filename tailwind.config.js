@@ -16,7 +16,7 @@ module.exports = {
         DEFAULT: '#5c7781',
       },
       zueriblue: {
-        light: '#B4CCFF',
+        light: '#6496FF',
         DEFAULT: '#0F05A0',
         dark: '#090036',
       },
