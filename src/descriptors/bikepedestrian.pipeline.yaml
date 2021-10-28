@@ -2,8 +2,8 @@ tasks:
   - type: resource
     source:
       name: data
-      path: https://data.stadt-zuerich.ch
-      format: ckan
+      path: https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/download/{{params.thisyear}}_verkehrszaehlungen_werte_fussgaenger_velo.csv
+      format: csv
       schema:
         fields:
           - name: FK_ZAEHLER
@@ -24,14 +24,14 @@ tasks:
             type: string
           - name: NORD
             type: string
-      dialect:
-        dataset: ted_taz_verkehrszaehlungen_werte_fussgaenger_velo
-        resource: "{{params.thisyear}}_verkehrszaehlungen_werte_fussgaenger_velo.csv"
-        limit: 32000
-        sort: DATUM desc
-        filters:
-          FK_ZAEHLER: "{{params.sensor_id}}"
+      layout:
+        pickRows: 
+          - {{params.sensor_id}}
     steps:
+      - code: table-normalize
+      - code: filter-value
+        field: "FK_ZAEHLER"
+        value: "{{params.sensor_id}}"
       - code: cell-fill
         fieldName: "{{params.sensor_type}}_IN"
         value: "0"

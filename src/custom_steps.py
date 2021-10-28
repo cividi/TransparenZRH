@@ -13,6 +13,9 @@ class transparenzrhPlugin(Plugin):
             if descriptor["code"] == "categorise-sensor":
                 descriptor.pop("code")
                 return categorise_sensor_step(**descriptor)
+            if descriptor["code"] == "filter-value":
+                descriptor.pop("code")
+                return filter_value_step(**descriptor)
 
 class date_transform_step(Step):
     """Transform a date string from sourceFormat into targetFormat (strftime formatters)"""
@@ -90,5 +93,33 @@ class categorise_sensor_step(Step):
         "properties": {
             "sourceName": {"type": "string"},
             "targetName": {"type": "string"},
+        },
+    }
+
+class filter_value_step(Step):
+    """Filter field based on value"""
+
+    code = "filter-value"
+
+    def __init__(self, descriptor=None, *, field=None, value=None):
+        self.setinitial("field", field)
+        self.setinitial("value", value)
+        super().__init__(descriptor)
+
+    def transform_resource(self, resource):
+        table = resource.to_petl()
+        field = self.get("field")
+        value = self.get("value")
+
+        resource.data = resource.data = table.select(field, lambda x: x == value)
+    
+    # Metadata
+
+    metadata_profile = {  # type: ignore
+        "type": "object",
+        "required": ["field","value"],
+        "properties": {
+            "field": {"type": "string"},
+            "value": {"type": "string"},
         },
     }
