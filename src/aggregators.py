@@ -48,6 +48,7 @@ try:
                 
                 # NOTE: currently not possible with descriptive table-write, as options other than path are not expanded correctly
                 pipeline.task.target.write(
+                    # path= "tmp/tmp.csv"  # for local debugging
                     path=f"s3://transparenzrh/bikepedestrian/{sensor['sensor_ref']}.csv",
                     control=S3Control(acl="public-read")
                 )
