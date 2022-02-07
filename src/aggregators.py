@@ -44,18 +44,17 @@ try:
                 template = env.get_template(f"bikepedestrian.pipeline.yaml")
                 recipe = template.render(params = sensor)
                 recipe_parsed = yaml.full_load(recipe)
-                pipeline = Pipeline(recipe_parsed).run()
-                
-                # NOTE: currently not possible with descriptive table-write, as options other than path are not expanded correctly
-                pipeline.task.target.write(
-                    path=f"s3://transparenzrh/bikepedestrian/{sensor['sensor_ref']}.csv",
-                    control=S3Control(acl="public-read")
-                )
-
-                if not pipeline.valid:
+                try:
+                    pipeline = Pipeline(recipe_parsed).run()
                     print(pipeline)
-                else:
+                    # NOTE: currently not possible with descriptive table-write, as options other than path are not expanded correctly
+                    pipeline.task.target.write(
+                        path=f"s3://transparenzrh/bikepedestrian/{sensor['sensor_ref']}.csv",
+                        control=S3Control(acl="public-read")
+                    )
                     print("done")
+                except Exception as e:
+                    print(f"An error occured during processing: {e}")
         except Exception as e:
             print(f"An error occured during processing: {e}")
     # else:
