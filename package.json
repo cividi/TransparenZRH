@@ -27,7 +27,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^7.20.0",
     "fibers": "^5.0.0",
-    "postcss": "^8.3.11",
+    "postcss": "^8.4.12",
     "prettier": "^2.4.1"
   }
 }
