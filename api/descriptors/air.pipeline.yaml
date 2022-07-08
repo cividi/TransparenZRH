@@ -45,7 +45,7 @@ tasks:
             missingValues: ["","NA"]
           dialect:
             dataset: ugz_luftschadstoffmessung_stundenwerte
-            resource: ugz_ogd_air_h1_2021.csv
+            resource: {{ params.ckan_resource }}
             filters:
               Standort: "{{params.sensor_id}}"
             limit: 9

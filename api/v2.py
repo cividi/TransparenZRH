@@ -5,12 +5,14 @@ import json
 import yaml
 import decimal
 import requests
-import statistics
 from flask import Flask, Response
 from flask_cors import CORS, cross_origin
+from werkzeug.datastructures import Headers
 
 from frictionless import Pipeline
 from jinja2 import Environment, FileSystemLoader
+
+from .utils import get_latest_csv_from_ckan
 
 locale.setlocale(locale.LC_ALL, 'de_DE')
 
@@ -32,8 +34,11 @@ def api(layout, sensor):
     response_code = 500
 
     if layout == 'air':
+        ckan_dataset = "ugz_luftschadstoffmessung_stundenwerte"
+        ckan_resource = get_latest_csv_from_ckan(ckan_url, ckan_dataset)
         data = {
             "ckan_url": ckan_url,
+            "ckan_resource": ckan_resource,
             "sensor_name": sensor.replace('Zch_',''),
             "sensor_id": sensor,
             "date_field": "Datum",
@@ -53,7 +58,9 @@ def api(layout, sensor):
         }
     elif layout == 'bike' or layout == 'pedestrian':
         try:
-            r = requests.head("https://data.stadt-zuerich.ch/dataset/ted_taz_verkehrszaehlungen_werte_fussgaenger_velo/download/2021_verkehrszaehlungen_werte_fussgaenger_velo.csv")
+            ckan_dataset = "ted_taz_verkehrszaehlungen_werte_fussgaenger_velo"
+            ckan_resource = get_latest_csv_from_ckan(ckan_url, ckan_dataset)
+            r = requests.head(f"{ckan_url}/dataset/{ckan_dataset}/download/{ckan_resource}")
             source_time = parser.parse(r.headers['last-modified'])
         except Exception as e:
             raise Exception(f"{e}, couldn't parse datetime string.")
@@ -101,4 +108,5 @@ def api(layout, sensor):
         json.dumps(response_body, cls=DecimalEncoder),
         mimetype = 'application/json',
         status = response_code,
+        headers = Headers([('Cache-Control','max-age=0, s-maxage=60, stale-while-revalidate=86400')])
     )
