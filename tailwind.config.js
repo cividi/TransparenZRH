@@ -1,6 +1,5 @@
 module.exports = {
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
+  content: [],
   theme: {
     fontFamily: {
       sans: ['Helvetica Neue LT Pro', 'Arial', 'sans-serif'],
@@ -30,9 +29,6 @@ module.exports = {
         DEFAULT: '#B30058',
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 }
