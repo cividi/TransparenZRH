@@ -5,10 +5,10 @@ module.exports = {
     node: true,
   },
   parserOptions: {
-    parser: 'babel-eslint',
-    rules: {
-      'object-shorthand': 1,
-    },
+    ecmaVersion: 12,
+    parser: '@babel/eslint-parser',
+    sourceType: 'module',
+    requireConfigFile: false,
   },
   extends: [
     '@nuxtjs',
@@ -17,5 +17,8 @@ module.exports = {
   ],
   plugins: [],
   // add your custom rules here
-  rules: {},
+  rules: {
+    'object-shorthand': 1,
+    'vue/multi-word-component-names': 0,
+  },
 }
