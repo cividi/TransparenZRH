@@ -20,7 +20,7 @@ tasks:
       title: Luftqualität {{params.sensor_name}}
       description: Die ersten systematischen Messungen der Luftqualität begannen in Zürich bereits Anfang der 1980er Jahre, weshalb wir auf eine der längsten Datenreihen der Schweiz zurückblicken können. Die Daten der Messtationen werden via OpenData-Portal im Internet zugänglich gemacht.
       sources:
-        - path: "{{params.ckan_url}}/dataset/ugz_luftschadstoffmessung_stundenwerte/resource/4466ec4a-b215-4134-8973-2f360e53c33d"
+        - path: "{{params.ckan_url}}/dataset/ugz_luftschadstoffmessung_stundenwerte/resource/{{params.ckan_resource}}"
           title: Rohdaten auf data.stadt-zuerich.ch
         - path: https://www.stadt-zuerich.ch/gud/de/index/umwelt_energie/luftqualitaet/messdaten.html
           title: Weitere Informationen und Daten zur Luftqualitätsmessung in der Stadt Zürich
