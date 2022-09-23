@@ -144,7 +144,7 @@ export default {
 
         const encoding = obj.spec.encoding
 
-        if (obj.specType === 'gauge') {
+        if (obj.specType === 'gauge' && data) {
           const nObj = {}
           nObj.type = obj.spec.mark
           Object.keys(encoding).forEach(function (enc) {

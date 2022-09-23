@@ -1,5 +1,6 @@
 import datetime
 from dateutil import parser
+import urllib
 import locale
 import json
 import yaml
@@ -34,6 +35,8 @@ def api(layout, sensor):
     ckan_url = "https://data.stadt-zuerich.ch"
     response_body = {}
     response_code = 500
+
+    sensor = urllib.parse.unquote(sensor, encoding="utf-8", errors="replace")
 
     if layout == "air":
         ckan_dataset = "ugz_luftschadstoffmessung_stundenwerte"
