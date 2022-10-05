@@ -16,7 +16,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       S3_ENDPOINT_URL: ${{ secrets.S3_ENDPOINT_URL }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python 3.9
       uses: actions/setup-python@v4
       with:
